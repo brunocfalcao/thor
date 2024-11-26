@@ -1,6 +1,6 @@
 {
     "name": "brunocfalcao/thor",
-    "description": "Nidavellir thor",
+    "description": "Nidavellir Thor",
     "keywords": [
         "php"
     ],
@@ -33,7 +33,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Nidavellir\\Mjolnir\\MjolnirServiceProvider"
+                "Nidavellir\\Thor\\ThorServiceProvider"
             ]
         }
     },
