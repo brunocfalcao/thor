@@ -3,11 +3,12 @@
 namespace Nidavellir\Thor\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Nidavellir\Mjolnir\Concerns\Models\Account\HasApiFeatures;
 use Nidavellir\Thor\Abstracts\UnguardableModel;
 
 class Account extends UnguardableModel
 {
-    use SoftDeletes;
+    use HasApiFeatures, SoftDeletes;
 
     protected $casts = [
         'is_active' => 'boolean',

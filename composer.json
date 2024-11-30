@@ -20,7 +20,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Nidavellir\\Thor\\": "src/"
+            "Nidavellir\\Thor\\": "src/",
+            "Nidavellir\\Thor\\Database\\Seeders\\": "database/seeders"
         },
         "files": [
             "src/helpers.php"

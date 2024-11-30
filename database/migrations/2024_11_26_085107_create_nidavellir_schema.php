@@ -10,6 +10,18 @@ return new class extends Migration
     // FK'S BOOLEANS INTS/NUMERICS STRINGS ARRAYS/JSONS DATETIMES
     public function up(): void
     {
+        Schema::create('api_jobs', function (Blueprint $table) {
+            $table->id();
+            $table->uuid('job_uuid')->unique();
+            $table->foreignId('account_id');
+            $table->string('endpoint');
+            $table->json('parameters')->nullable();
+            $table->string('status')->default('pending');
+            $table->string('worker_hostname')->nullable();
+            $table->string('error_message')->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('price_history', function (Blueprint $table) {
             $table->id();
             $table->foreignId('exchange_symbol_id');
@@ -25,7 +37,7 @@ return new class extends Migration
             $table->unsignedBigInteger('duration')->nullable();
 
             $table->string('class');
-            $table->string('job_gate_class')->default(\App\Jobs\Gatekeepers\RateLimitedJob::class);
+            $table->string('job_gate_class')->default(\Nidavellir\Mjolnir\Jobs\Gatekeepers\RateLimitedJob::class);
 
             $table->uuid('job_uuid')->nullable();
             $table->uuid('block_uuid')->nullable();
@@ -336,20 +348,12 @@ return new class extends Migration
                 ->nullable()
                 ->comment('The exchange system order id');
 
-            $table->decimal('initial_quantity', 20, 8)
-                ->comment('The initial order quantity aimed to be purchased');
+            $table->decimal('quantity', 20, 8)
+                ->comment('The order initial or filled quantity, depending on the order status');
 
-            $table->decimal('current_quantity', 20, 8)
+            $table->decimal('price', 20, 8)
                 ->nullable()
-                ->comment('The current filled quantity for this order');
-
-            $table->decimal('initial_average_price', 20, 8)
-                ->nullable()
-                ->comment('The initial average price for the order');
-
-            $table->decimal('current_average_price', 20, 8)
-                ->nullable()
-                ->comment('The current average price for the order, the only ones that will be different from the initial average price will be the profit order');
+                ->comment('The order initial or average price, depending on the status');
 
             $table->timestamp('started_at')->nullable();
             $table->timestamp('closed_at')->nullable();
@@ -383,12 +387,17 @@ return new class extends Migration
             $table->timestamp('started_at')->nullable();
             $table->timestamp('closed_at')->nullable();
 
-            $table->decimal('realized_pnl', 20, 8)
-                ->nullable();
-
             $table->decimal('opening_price', 20, 8)
                 ->nullable()
-                ->comment('The current exchange symbol mark price when the position was created');
+                ->comment('The current exchange symbol mark price when the position was opened');
+
+            $table->decimal('closing_price', 20, 8)
+                ->nullable()
+                ->comment('The current exchange symbol mark price when the position was closed');
+
+            $table->decimal('realized_pnl', 20, 8)
+                ->nullable()
+                ->comment('The realized PnL given by the exchange');
 
             $table->longText('order_ratios')->nullable()
                 ->comment('The trade configuration (profit, limit, market, etc)');
@@ -417,7 +426,7 @@ return new class extends Migration
 
         /*
         Artisan::call('db:seed', [
-            '--class' => Database\Seeders\SchemaSeeder1::class,
+            '--class' => Nidavellir\Thor\Database\Seeders\SchemaSeeder1::class,
         ]);
         */
     }

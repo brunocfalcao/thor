@@ -3,9 +3,14 @@
 namespace Nidavellir\Thor\Models;
 
 use Nidavellir\Thor\Abstracts\UnguardableModel;
+use Nidavellir\Thor\Concerns\Position\HasStatusFeatures;
+use Nidavellir\Thor\Concerns\Position\HasTokenFeatures;
 
 class Position extends UnguardableModel
 {
+    use HasStatusFeatures;
+    use HasTokenFeatures;
+
     protected $casts = [
         'is_syncing' => 'boolean',
         'is_locked' => 'boolean',
