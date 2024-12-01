@@ -4,10 +4,17 @@ namespace Nidavellir\Thor\Models;
 
 use Illuminate\Support\Facades\DB;
 use Nidavellir\Thor\Abstracts\UnguardableModel;
+use Nidavellir\Thor\Concerns\JobQueue\HasIndexFeatures;
+use Nidavellir\Thor\Concerns\JobQueue\HasStatusesFeatures;
+use Nidavellir\Thor\Concerns\JobQueue\HasTimerFeatures;
 use ReflectionClass;
 
 class JobQueue extends UnguardableModel
 {
+    use HasIndexFeatures;
+    use HasStatusesFeatures;
+    use HasTimerFeatures;
+
     protected $table = 'job_block_queue';
 
     protected $casts = [
