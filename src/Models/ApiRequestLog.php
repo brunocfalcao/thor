@@ -2,9 +2,9 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Nidavellir\Thor\Abstracts\UnguardableModel;
+use Illuminate\Database\Eloquent\Model;
 
-class ApiRequestLog extends UnguardableModel
+class ApiRequestLog extends Model
 {
     protected $table = 'api_requests_log';
 

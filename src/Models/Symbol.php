@@ -2,9 +2,9 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Nidavellir\Thor\Abstracts\UnguardableModel;
+use Illuminate\Database\Eloquent\Model;
 
-class Symbol extends UnguardableModel
+class Symbol extends Model
 {
     protected $casts = [
         'is_active' => 'boolean',

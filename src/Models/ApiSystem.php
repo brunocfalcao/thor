@@ -2,14 +2,14 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Nidavellir\Thor\Abstracts\UnguardableModel;
+use Illuminate\Database\Eloquent\Model;
 use Nidavellir\Thor\Concerns\ApiSystem\HasApiSystemCollections;
 
 /**
  * Defines the many-to-many relationship between
  * ApiSystem and User.
  */
-class ApiSystem extends UnguardableModel
+class ApiSystem extends Model
 {
     use HasApiSystemCollections;
 

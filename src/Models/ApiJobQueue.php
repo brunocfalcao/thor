@@ -2,13 +2,13 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\Str;
-use Nidavellir\Thor\Abstracts\UnguardableModel;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class ApiJobQueue extends UnguardableModel
+class ApiJobQueue extends Model
 {
     use HasFactory;
 

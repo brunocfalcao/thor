@@ -2,9 +2,9 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Nidavellir\Thor\Abstracts\UnguardableModel;
+use Illuminate\Database\Eloquent\Model;
 
-class TradeConfiguration extends UnguardableModel
+class TradeConfiguration extends Model
 {
     protected $table = 'trade_configuration';
 

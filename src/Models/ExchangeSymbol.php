@@ -2,10 +2,10 @@
 
 namespace Nidavellir\Thor\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Nidavellir\Thor\Abstracts\UnguardableModel;
 
-class ExchangeSymbol extends UnguardableModel
+class ExchangeSymbol extends Model
 {
     use SoftDeletes;
 

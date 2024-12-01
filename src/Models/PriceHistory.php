@@ -2,9 +2,9 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Nidavellir\Thor\Abstracts\UnguardableModel;
+use Illuminate\Database\Eloquent\Model;
 
-class PriceHistory extends UnguardableModel
+class PriceHistory extends Model
 {
     protected $table = 'price_history';
 

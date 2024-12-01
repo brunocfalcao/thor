@@ -3,9 +3,8 @@
 namespace Nidavellir\Thor\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Nidavellir\Thor\Abstracts\UnguardableModel;
 
-class Trace extends UnguardableModel
+class Trace extends Model
 {
     // Define the database table associated with this model.
     protected $table = 'traceables';

@@ -2,11 +2,11 @@
 
 namespace Nidavellir\Thor\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Nidavellir\Mjolnir\Concerns\Models\Account\HasApiFeatures;
-use Nidavellir\Thor\Abstracts\UnguardableModel;
 
-class Account extends UnguardableModel
+class Account extends Model
 {
     use HasApiFeatures, SoftDeletes;
 

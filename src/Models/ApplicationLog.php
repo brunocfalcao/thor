@@ -2,9 +2,9 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Nidavellir\Thor\Abstracts\UnguardableModel;
+use Illuminate\Database\Eloquent\Model;
 
-class ApplicationLog extends UnguardableModel
+class ApplicationLog extends Model
 {
     protected $casts = [
         'debug_backtrace' => 'array',

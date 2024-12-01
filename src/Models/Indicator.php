@@ -2,9 +2,9 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Nidavellir\Thor\Abstracts\UnguardableModel;
+use Illuminate\Database\Eloquent\Model;
 
-class Indicator extends UnguardableModel
+class Indicator extends Model
 {
     protected $casts = [
         'is_apiable' => 'boolean',

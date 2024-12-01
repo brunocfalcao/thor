@@ -12,6 +12,9 @@ return new class extends Migration
     {
         Schema::create('job_api_queue', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('job_queue_id')->nullable();
+
             $table->bigInteger('sequencial_id')->nullable();
             $table->unsignedInteger('index')->nullable();
             $table->unsignedBigInteger('duration')->nullable();

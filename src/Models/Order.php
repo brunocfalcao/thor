@@ -2,11 +2,11 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Nidavellir\Mjolnir\Concerns\Models\Order\HasApiFeatures;
-use Nidavellir\Thor\Abstracts\UnguardableModel;
+use Illuminate\Database\Eloquent\Model;
 use Nidavellir\Thor\Concerns\Order\HasStatusesFeatures;
+use Nidavellir\Mjolnir\Concerns\Models\Order\HasApiFeatures;
 
-class Order extends UnguardableModel
+class Order extends Model
 {
     use HasApiFeatures;
     use HasStatusesFeatures;

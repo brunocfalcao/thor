@@ -2,11 +2,11 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Nidavellir\Thor\Abstracts\UnguardableModel;
-use Nidavellir\Thor\Concerns\Position\HasStatusesFeatures;
+use Illuminate\Database\Eloquent\Model;
 use Nidavellir\Thor\Concerns\Position\HasTokenFeatures;
+use Nidavellir\Thor\Concerns\Position\HasStatusesFeatures;
 
-class Position extends UnguardableModel
+class Position extends Model
 {
     use HasStatusesFeatures;
     use HasTokenFeatures;
