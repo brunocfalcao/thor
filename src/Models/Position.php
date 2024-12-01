@@ -3,12 +3,12 @@
 namespace Nidavellir\Thor\Models;
 
 use Nidavellir\Thor\Abstracts\UnguardableModel;
-use Nidavellir\Thor\Concerns\Position\HasStatusFeatures;
+use Nidavellir\Thor\Concerns\Position\HasStatusesFeatures;
 use Nidavellir\Thor\Concerns\Position\HasTokenFeatures;
 
 class Position extends UnguardableModel
 {
-    use HasStatusFeatures;
+    use HasStatusesFeatures;
     use HasTokenFeatures;
 
     protected $casts = [

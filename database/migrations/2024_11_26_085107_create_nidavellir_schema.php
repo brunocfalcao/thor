@@ -10,15 +10,30 @@ return new class extends Migration
     // FK'S BOOLEANS INTS/NUMERICS STRINGS ARRAYS/JSONS DATETIMES
     public function up(): void
     {
-        Schema::create('api_jobs', function (Blueprint $table) {
+        Schema::create('job_api_queue', function (Blueprint $table) {
             $table->id();
-            $table->uuid('job_uuid')->unique();
-            $table->foreignId('account_id');
-            $table->string('endpoint');
+            $table->bigInteger('sequencial_id')->nullable();
+            $table->unsignedInteger('index')->nullable();
+            $table->unsignedBigInteger('duration')->nullable();
+
+            $table->string('class');
+
+            $table->uuid('block_uuid')->nullable();
+            $table->uuid('job_uuid')->nullable();
+
             $table->json('parameters')->nullable();
+            $table->json('response')->nullable();
+
             $table->string('status')->default('pending');
-            $table->string('worker_hostname')->nullable();
-            $table->string('error_message')->nullable();
+            $table->string('queue_name')->default('default');
+            $table->string('hostname')->nullable();
+            $table->text('error_message')->nullable();
+            $table->text('error_stack_trace')->nullable();
+
+            $table->timestamp('dispatch_after')->nullable();
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
+
             $table->timestamps();
         });
 
@@ -29,7 +44,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('job_queue', function (Blueprint $table) {
+        Schema::create('job_block_queue', function (Blueprint $table) {
             $table->id();
 
             $table->bigInteger('sequencial_id')->nullable();
@@ -37,7 +52,6 @@ return new class extends Migration
             $table->unsignedBigInteger('duration')->nullable();
 
             $table->string('class');
-            $table->string('job_gate_class')->default(\Nidavellir\Mjolnir\Jobs\Gatekeepers\RateLimitedJob::class);
 
             $table->uuid('job_uuid')->nullable();
             $table->uuid('block_uuid')->nullable();
@@ -215,6 +229,11 @@ return new class extends Migration
             $table->boolean('is_exchange')->default(true);
 
             $table->string('name');
+
+            $table->unsignedInteger('recvwindow_margin')
+                ->default(10000)
+                ->comment('The miliseconds margin so we dont get errors due to server time vs exchange time desynchronizations');
+
             $table->string('canonical')->unique();
             $table->string('taapi_canonical')->nullable();
 
@@ -260,11 +279,16 @@ return new class extends Migration
             $table->id();
             $table->foreignId('symbol_id');
             $table->foreignId('quote_id');
-            $table->string('is_upsertable')
+
+            $table->boolean('is_active')
+                ->default(true)
+                ->comment('Global active status exchange symbol. If false, it will not be selected for trades, no matter else');
+
+            $table->boolean('is_upsertable')
                 ->default(true)
                 ->comment('If this exchange symbol will be updated (cronjobs, last mark price, etc)');
 
-            $table->string('is_tradeable')
+            $table->boolean('is_tradeable')
                 ->default(false)
                 ->comment('If this exchange symbol will be available for new positions');
 
@@ -361,8 +385,6 @@ return new class extends Migration
             $table->longText('api_result')->nullable();
             $table->longText('error_message')->nullable();
             $table->timestamps();
-
-            $table->index(['position_id', 'type', 'current_quantity']);
         });
 
         Schema::create('positions', function (Blueprint $table) {
@@ -418,16 +440,10 @@ return new class extends Migration
             $table->text('comments')->nullable();
 
             $table->timestamps();
-
-            $table->index(['account_id', 'exchange_symbol_id']);
-            $table->index('exchange_symbol_id');
-            $table->index(['status']);
         });
 
-        /*
         Artisan::call('db:seed', [
             '--class' => Nidavellir\Thor\Database\Seeders\SchemaSeeder1::class,
         ]);
-        */
     }
 };

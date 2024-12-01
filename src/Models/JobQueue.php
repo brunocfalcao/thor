@@ -2,15 +2,13 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Nidavellir\Thor\Abstracts\UnguardableModel;
 use ReflectionClass;
 
-class JobQueue extends Model
+class JobQueue extends UnguardableModel
 {
-    protected $table = 'job_queue';
-
-    protected $guarded = [];
+    protected $table = 'job_block_queue';
 
     protected $casts = [
         'arguments' => 'array',
@@ -35,7 +33,7 @@ class JobQueue extends Model
             }
 
             // Determine the index value.
-            if ($index === null && $indexed) {
+            if ($index == null && $indexed) {
                 $index = self::where('block_uuid', $block)->max('index') + 1;
             }
 

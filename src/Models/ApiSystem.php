@@ -3,6 +3,7 @@
 namespace Nidavellir\Thor\Models;
 
 use Nidavellir\Thor\Abstracts\UnguardableModel;
+use Nidavellir\Thor\Concerns\ApiSystem\HasApiSystemCollections;
 
 /**
  * Defines the many-to-many relationship between
@@ -10,6 +11,8 @@ use Nidavellir\Thor\Abstracts\UnguardableModel;
  */
 class ApiSystem extends UnguardableModel
 {
+    use HasApiSystemCollections;
+
     public function accounts()
     {
         return $this->hasMany(Account::class);

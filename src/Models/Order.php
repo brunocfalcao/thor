@@ -4,12 +4,12 @@ namespace Nidavellir\Thor\Models;
 
 use Nidavellir\Mjolnir\Concerns\Models\Order\HasApiFeatures;
 use Nidavellir\Thor\Abstracts\UnguardableModel;
-use Nidavellir\Thor\Concerns\Order\HasStatusFeatures;
+use Nidavellir\Thor\Concerns\Order\HasStatusesFeatures;
 
 class Order extends UnguardableModel
 {
     use HasApiFeatures;
-    use HasStatusFeatures;
+    use HasStatusesFeatures;
 
     protected $casts = [
         'is_syncing' => 'boolean',

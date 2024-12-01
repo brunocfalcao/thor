@@ -1,8 +1,8 @@
 <?php
 
-namespace Nidavellir\Thor\Concerns\Order;
+namespace Nidavellir\Thor\Concerns\Position;
 
-trait HasStatusFeatures
+trait HasStatusesFeatures
 {
     public function changeToSyncing()
     {

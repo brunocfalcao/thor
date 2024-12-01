@@ -10,6 +10,7 @@ class ExchangeSymbol extends UnguardableModel
     use SoftDeletes;
 
     protected $casts = [
+        'is_active' => 'boolean',
         'is_upsertable' => 'boolean',
         'is_tradeable' => 'boolean',
         'symbol_information' => 'array',

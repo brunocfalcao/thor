@@ -6,10 +6,15 @@ namespace Nidavellir\Thor\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Nidavellir\Thor\Models\Account;
 use Nidavellir\Thor\Models\ApiSystem;
+use Nidavellir\Thor\Models\ExchangeSymbol;
 use Nidavellir\Thor\Models\Indicator;
+use Nidavellir\Thor\Models\Order;
+use Nidavellir\Thor\Models\Position;
 use Nidavellir\Thor\Models\Quote;
+use Nidavellir\Thor\Models\Symbol;
 use Nidavellir\Thor\Models\TradeConfiguration;
 use Nidavellir\Thor\Models\TradingPair;
 use Nidavellir\Thor\Models\User;
@@ -159,25 +164,21 @@ class SchemaSeeder1 extends Seeder
 
         $tradingPairs = [
             ['SOL-USDT', 5426],
-            ['BNB-USDT', 1839],
+            ['DOGE-USDT', 74],
             ['XRP-USDT', 52],
             ['ADA-USDT', 2010],
             ['TON-USDT', 11419],
             ['AVAX-USDT', 5805],
             ['LINK-USDT', 1975],
-            ['SUI-USDT', 20947],
             ['UNI-USDT', 7083],
-            ['NEAR-USDT', 6535],
-            ['ICP-USDT', 8916],
-            ['FET-USDT', 3773],
             ['AAVE-USDT', 7278],
-            ['RENDER-USDT', 5690],
+            ['NEO-USDT', 1376],
             ['FIL-USDT', 2280],
             ['TIA-USDT', 22861],
             ['IMX-USDT', 10603],
-            ['FTM-USDT', 3513],
-            ['RUNE-USDT', 4157],
-            ['ATOM-USDT', 3794],
+            ['QNT-USDT', 3155],
+            ['GALA-USDT', 7080],
+            ['JASMY-USDT', 8425],
         ];
 
         foreach ($tradingPairs as $pair) {
@@ -266,6 +267,43 @@ class SchemaSeeder1 extends Seeder
             'user_id' => $admin->id,
             'api_system_id' => $alternativeMe->id,
             'max_balance_percentage' => 0,
+        ]);
+
+        // Stubs.
+        // Insert Order stub.
+        $order = Order::create([
+            'position_id' => 1,
+            'uuid' => (string) Str::uuid(),
+            'type' => 'MARKET',
+            'status' => 'FILLED',
+            'quantity' => 2,
+            'price' => 10,
+            'side' => 'BUY',
+            'quantity' => 1,
+            'exchange_order_id' => 29917820287,
+        ]);
+
+        $position = Position::create([
+            'trade_configuration_id' => 4,
+            'account_id' => 1,
+            'exchange_symbol_id' => 1,
+            'status' => 'closed',
+            'direction' => 'LONG',
+        ]);
+
+        Symbol::create([
+            'cmc_id' => 2280,
+            'name' => 'Filecoin',
+            'token' => 'FIL',
+        ]);
+
+        ExchangeSymbol::create([
+            'symbol_id' => 1,
+            'quote_id' => 1,
+            'api_system_id' => 1,
+            'price_precision' => 3,
+            'quantity_precision' => 1,
+            'tick_size' => 0.001,
         ]);
     }
 }
