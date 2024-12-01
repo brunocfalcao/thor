@@ -79,27 +79,27 @@ class SchemaSeeder1 extends Seeder
         ]);
 
         Indicator::create([
-            'canonical' => 'ema-18',
+            'canonical' => 'ema-80',
             'class' => "Nidavellir\Mjolnir\Indicators\EMAIndicator",
             'parameters' => [
                 'results' => 2,
-                'period' => '18',
+                'period' => '80',
             ],
         ]);
 
         Indicator::create([
-            'canonical' => 'ema-36',
+            'canonical' => 'ema-160',
             'class' => "Nidavellir\Mjolnir\Indicators\EMAIndicator",
             'parameters' => [
                 'results' => 2,
-                'period' => '36',
+                'period' => '160',
             ],
         ]);
 
         TradeConfiguration::create([
             'is_active' => true,
-            'canonical' => 'equal-7-to-28',
-            'description' => '7 percent limit gaps until 28 percent drop',
+            'canonical' => 'standard',
+            'description' => 'average limit orders + final at 31.45',
             'negative_pnl_stop_threshold' => 3.5,
             'max_concurrent_trades' => 6,
             'minimum_margin' => 50,
@@ -109,13 +109,13 @@ class SchemaSeeder1 extends Seeder
                 'MARKET' => [0, 32],
 
                 'LIMIT' => [
-                    [-7,  16],
-                    [-14,  8],
-                    [-21,  4],
-                    [-28,  2],
+                    [-7.79,  16],
+                    [-15.67,  8],
+                    [-23.58,  4],
+                    [-31.45,  2],
                 ],
 
-                'PROFIT' => [0.31, 1],
+                'PROFIT' => [0.33, 1],
             ],
         ]);
 

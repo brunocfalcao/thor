@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use Nidavellir\Thor\Abstracts\UnguardableModel;
 
-class ApiJob extends UnguardableModel
+class ApiJobQueue extends UnguardableModel
 {
     use HasFactory;
 

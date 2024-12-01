@@ -67,19 +67,17 @@ class JobQueue extends UnguardableModel
         }
     }
 
-    public static function dispatch(int $batchSize = 10)
+    public static function dispatch()
     {
         DB::beginTransaction();
 
         try {
-            // Select a batch of pending jobs where dispatch_after is null or <= now().
             $jobs = self::where('status', 'pending')
                 ->where(function ($query) {
                     $query->whereNull('dispatch_after')
                         ->orWhere('dispatch_after', '<=', now());
                 })
                 ->orderBy('created_at')
-                ->limit($batchSize)
                 ->lockForUpdate()
                 ->get();
 
@@ -97,7 +95,6 @@ class JobQueue extends UnguardableModel
 
             DB::commit();
 
-            // Dispatch each job in the batch.
             foreach ($jobs as $job) {
                 try {
                     $childJob = self::instantiateJobWithArguments($job->class, $job->arguments);
