@@ -2,26 +2,26 @@
 
 namespace Nidavellir\Thor\Models;
 
-use ReflectionClass;
-use RuntimeException;
-use ReflectionException;
-use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
-use Illuminate\Database\Eloquent\Model;
-use Nidavellir\Thor\Concerns\AnyJobQueue\HasUuidFeatures;
-use Nidavellir\Thor\Concerns\AnyJobQueue\HasIndexFeatures;
-use Nidavellir\Thor\Concerns\AnyJobQueue\HasTimerFeatures;
-use Nidavellir\Thor\Concerns\AnyJobQueue\HasStatusesFeatures;
+use InvalidArgumentException;
 use Nidavellir\Thor\Concerns\AnyJobQueue\HasDispatchableFeatures;
+use Nidavellir\Thor\Concerns\AnyJobQueue\HasIndexFeatures;
+use Nidavellir\Thor\Concerns\AnyJobQueue\HasStatusesFeatures;
+use Nidavellir\Thor\Concerns\AnyJobQueue\HasTimerFeatures;
+use Nidavellir\Thor\Concerns\AnyJobQueue\HasUuidFeatures;
+use ReflectionClass;
+use ReflectionException;
+use RuntimeException;
 
 class CoreJobQueue extends Model
 {
+    use HasDispatchableFeatures;
     use HasIndexFeatures;
     use HasStatusesFeatures;
     use HasTimerFeatures;
     use HasUuidFeatures;
-    use HasDispatchableFeatures;
 
     protected $table = 'core_job_queue';
 
