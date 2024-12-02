@@ -63,6 +63,7 @@ return new class extends Migration
             $table->uuid('job_uuid')->nullable();
 
             $table->json('arguments')->nullable();
+            $table->json('response')->nullable();
 
             $table->text('error_message')->nullable();
             $table->text('error_stack_trace')->nullable();

@@ -85,11 +85,6 @@ trait HasDispatchableFeatures
                         $jobInstance->coreJobQueue = $job;
                     }
 
-                    // Check if the instantiated class has the 'coreJobQueue' property
-                    if (property_exists($jobInstance, 'apiJobQueue')) {
-                        $jobInstance->apiJobQueue = $job;
-                    }
-
                     // Dispatch the job
                     Queue::pushOn($job->queue, $jobInstance);
                 }

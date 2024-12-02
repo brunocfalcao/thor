@@ -36,4 +36,27 @@ trait HasIndexFeatures
             });
         }
     }
+
+    public function getPrevious()
+    {
+        $modelClass = get_class($this);
+
+        // Return an empty collection if index is null
+        if (is_null($this->index)) {
+            return $modelClass::newCollection();
+        }
+
+        // Calculate the previous index
+        $previousIndex = $this->index - 1;
+
+        if ($previousIndex <= 0) {
+            // If there's no valid previous index, return an empty collection
+            return $modelClass::newCollection();
+        }
+
+        // Fetch all job queues with the previous index and the same block_uuid
+        return $modelClass::where('block_uuid', $this->block_uuid)
+            ->where('index', $previousIndex)
+            ->get();
+    }
 }
