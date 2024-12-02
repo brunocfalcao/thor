@@ -1,38 +1,34 @@
 <?php
 
-namespace Nidavellir\Thor\Concerns\JobQueue;
+namespace Nidavellir\Thor\Concerns\AnyJobQueue;
 
 trait HasStatusesFeatures
 {
-    protected function updateToRunning()
+    public function updateToRunning()
     {
         $this->update([
             'status' => 'running',
             'hostname' => gethostname(),
+            'started_at' => now(),
         ]);
-
-        $this->startDuration();
     }
 
-    protected function updateToCompleted()
+    public function updateToCompleted()
     {
         $this->update([
             'status' => 'completed',
+            'completed_at' => now(),
         ]);
-
-        $this->finalizeDuration();
     }
 
-    protected function updateToDispatched()
+    public function updateToDispatched()
     {
         $this->update([
             'status' => 'dispatched',
         ]);
-
-        $this->finalizeDuration();
     }
 
-    protected function updateToReseted()
+    public function updateToReseted()
     {
         $this->update([
             'status' => 'pending',
@@ -52,8 +48,7 @@ trait HasStatusesFeatures
             'status' => 'failed',
             'error_message' => $e->getMessage().' (line '.$e->getLine().')',
             'error_stack_trace' => $e->getTraceAsString(),
+            'completed_at' => now(),
         ]);
-
-        $this->finalizeDuration();
     }
 }

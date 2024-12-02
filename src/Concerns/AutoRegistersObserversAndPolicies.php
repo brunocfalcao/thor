@@ -14,7 +14,8 @@ trait AutoRegistersObserversAndPolicies
      */
     public function autoRegisterObservers()
     {
-        $observersPath = app_path('Observers');
+        $rootPath = __DIR__.'/../';
+        $observersPath = $rootPath.'Observers';
 
         // Check if the Observers directory exists
         if (! File::exists($observersPath)) {
@@ -22,7 +23,7 @@ trait AutoRegistersObserversAndPolicies
         }
 
         // Get all model files from the default Models directory
-        $modelsPath = app_path('Models');
+        $modelsPath = $rootPath.'Models';
         $modelFiles = File::exists($modelsPath) ? File::allFiles($modelsPath) : [];
 
         foreach ($modelFiles as $modelFile) {
@@ -45,7 +46,8 @@ trait AutoRegistersObserversAndPolicies
      */
     public function autoRegisterPolicies()
     {
-        $policiesPath = app_path('Policies');
+        $rootPath = __DIR__.'/../';
+        $policiesPath = $rootPath.'Policies';
 
         // Check if the Policies directory exists
         if (! File::exists($policiesPath)) {
@@ -53,7 +55,7 @@ trait AutoRegistersObserversAndPolicies
         }
 
         // Get all model files from the default Models directory
-        $modelsPath = app_path('Models');
+        $modelsPath = $rootPath.'Models';
         $modelFiles = File::exists($modelsPath) ? File::allFiles($modelsPath) : [];
 
         foreach ($modelFiles as $modelFile) {

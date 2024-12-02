@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    // FK'S BOOLEANS INTS/NUMERICS STRINGS ARRAYS/JSONS DATETIMES
+    // FK'S BOOLEANS INTS/NUMERICS STRINGS ARRAYS/JSONS TEXTS DATETIMES
     public function up(): void
     {
-        Schema::create('job_api_queue', function (Blueprint $table) {
+        Schema::create('api_job_queue', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('job_queue_id')->nullable();
@@ -24,11 +24,11 @@ return new class extends Migration
             $table->uuid('block_uuid')->nullable();
             $table->uuid('job_uuid')->nullable();
 
-            $table->json('parameters')->nullable();
+            $table->json('arguments')->nullable();
             $table->json('response')->nullable();
 
             $table->string('status')->default('pending');
-            $table->string('queue_name')->default('default');
+            $table->string('queue')->default('default');
             $table->string('hostname')->nullable();
             $table->text('error_message')->nullable();
             $table->text('error_stack_trace')->nullable();
@@ -47,24 +47,23 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('job_block_queue', function (Blueprint $table) {
+        Schema::create('core_job_queue', function (Blueprint $table) {
             $table->id();
 
             $table->bigInteger('sequencial_id')->nullable();
             $table->unsignedInteger('index')->nullable();
-            $table->unsignedBigInteger('duration')->nullable();
+            $table->unsignedInteger('duration')->nullable();
 
             $table->string('class');
+            $table->string('status')->default('pending');
+            $table->string('queue')->nullable();
+            $table->string('hostname')->nullable();
 
-            $table->uuid('job_uuid')->nullable();
             $table->uuid('block_uuid')->nullable();
+            $table->uuid('job_uuid')->nullable();
 
             $table->json('arguments')->nullable();
-            $table->json('extra_data')->nullable();
 
-            $table->string('status')->default('pending');
-            $table->string('queue_name')->nullable();
-            $table->string('hostname')->nullable();
             $table->text('error_message')->nullable();
             $table->text('error_stack_trace')->nullable();
 

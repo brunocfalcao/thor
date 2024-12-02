@@ -3,8 +3,8 @@
 namespace Nidavellir\Thor\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Nidavellir\Thor\Concerns\Order\HasStatusesFeatures;
 use Nidavellir\Mjolnir\Concerns\Models\Order\HasApiFeatures;
+use Nidavellir\Thor\Concerns\Order\HasStatusesFeatures;
 
 class Order extends Model
 {

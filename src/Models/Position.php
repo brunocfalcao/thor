@@ -3,8 +3,8 @@
 namespace Nidavellir\Thor\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Nidavellir\Thor\Concerns\Position\HasTokenFeatures;
 use Nidavellir\Thor\Concerns\Position\HasStatusesFeatures;
+use Nidavellir\Thor\Concerns\Position\HasTokenFeatures;
 
 class Position extends Model
 {
