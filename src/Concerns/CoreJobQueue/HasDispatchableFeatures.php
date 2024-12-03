@@ -1,6 +1,6 @@
 <?php
 
-namespace Nidavellir\Thor\Concerns\AnyJobQueue;
+namespace Nidavellir\Thor\Concerns\CoreJobQueue;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;

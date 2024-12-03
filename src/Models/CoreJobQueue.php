@@ -3,16 +3,18 @@
 namespace Nidavellir\Thor\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Nidavellir\Thor\Concerns\AnyJobQueue\HasDispatchableFeatures;
-use Nidavellir\Thor\Concerns\AnyJobQueue\HasIndexFeatures;
-use Nidavellir\Thor\Concerns\AnyJobQueue\HasStatusesFeatures;
-use Nidavellir\Thor\Concerns\AnyJobQueue\HasTimerFeatures;
-use Nidavellir\Thor\Concerns\AnyJobQueue\HasUuidFeatures;
+use Nidavellir\Thor\Concerns\CoreJobQueue\HasDispatchableFeatures;
+use Nidavellir\Thor\Concerns\CoreJobQueue\HasIndexFeatures;
+use Nidavellir\Thor\Concerns\CoreJobQueue\HasRefreshFeatures;
+use Nidavellir\Thor\Concerns\CoreJobQueue\HasStatusesFeatures;
+use Nidavellir\Thor\Concerns\CoreJobQueue\HasTimerFeatures;
+use Nidavellir\Thor\Concerns\CoreJobQueue\HasUuidFeatures;
 
 class CoreJobQueue extends Model
 {
     use HasDispatchableFeatures;
     use HasIndexFeatures;
+    use HasRefreshFeatures;
     use HasStatusesFeatures;
     use HasTimerFeatures;
     use HasUuidFeatures;
