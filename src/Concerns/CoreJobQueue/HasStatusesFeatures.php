@@ -44,6 +44,15 @@ trait HasStatusesFeatures
         ]);
     }
 
+    public function updateToRollbacked()
+    {
+        $this->updateToReseted();
+
+        $this->update([
+            'status' => 'rollbacked',
+        ]);
+    }
+
     public function updateToFailed(\Throwable $e)
     {
         DB::transaction(function () use ($e) {
@@ -55,14 +64,17 @@ trait HasStatusesFeatures
                 'completed_at' => now(),
             ]);
 
-            // Cancel all remaining jobs with the same block_uuid and higher index
-            $modelClass = get_class($this);
-            $modelClass::where('block_uuid', $this->block_uuid)
-                ->where('index', '>', $this->index)
-                ->where('status', 'pending') // Only cancel jobs still in 'pending' status
-                ->update([
-                    'status' => 'cancelled',
-                ]);
+            // Apply "next index" logic.
+            if ($this->index) {
+                // Cancel all remaining jobs with the same block_uuid and higher index
+                $modelClass = get_class($this);
+                $modelClass::where('block_uuid', $this->block_uuid)
+                    ->where('index', '>', $this->index)
+                    ->where('status', 'pending') // Only cancel jobs still in 'pending' status
+                    ->update([
+                        'status' => 'cancelled',
+                    ]);
+            }
         });
     }
 }

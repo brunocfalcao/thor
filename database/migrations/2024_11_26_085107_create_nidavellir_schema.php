@@ -10,36 +10,6 @@ return new class extends Migration
     // FK'S BOOLEANS INTS/NUMERICS STRINGS ARRAYS/JSONS TEXTS DATETIMES
     public function up(): void
     {
-        Schema::create('api_job_queue', function (Blueprint $table) {
-            $table->id();
-
-            $table->foreignId('job_queue_id')->nullable();
-
-            $table->bigInteger('sequencial_id')->nullable();
-            $table->unsignedInteger('index')->nullable();
-            $table->unsignedBigInteger('duration')->nullable();
-
-            $table->string('class');
-
-            $table->uuid('block_uuid')->nullable();
-            $table->uuid('job_uuid')->nullable();
-
-            $table->json('arguments')->nullable();
-            $table->json('response')->nullable();
-
-            $table->string('status')->default('pending');
-            $table->string('queue')->default('default');
-            $table->string('hostname')->nullable();
-            $table->text('error_message')->nullable();
-            $table->text('error_stack_trace')->nullable();
-
-            $table->timestamp('dispatch_after')->nullable();
-            $table->timestamp('started_at')->nullable();
-            $table->timestamp('completed_at')->nullable();
-
-            $table->timestamps();
-        });
-
         Schema::create('price_history', function (Blueprint $table) {
             $table->id();
             $table->foreignId('exchange_symbol_id');
