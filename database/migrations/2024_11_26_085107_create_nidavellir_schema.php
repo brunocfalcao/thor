@@ -23,6 +23,7 @@ return new class extends Migration
             $table->bigInteger('sequencial_id')->nullable();
             $table->unsignedInteger('index')->nullable();
             $table->unsignedInteger('duration')->nullable();
+            $table->unsignedInteger('retries')->default(0);
 
             $table->string('class');
             $table->string('status')->default('pending');

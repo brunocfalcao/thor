@@ -2,6 +2,7 @@
 
 namespace Nidavellir\Thor\Concerns\CoreJobQueue;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 trait HasStatusesFeatures
@@ -30,10 +31,11 @@ trait HasStatusesFeatures
         ]);
     }
 
-    public function updateToReseted()
+    public function updateToPending(?Carbon $retryAfter = null)
     {
-        $this->update([
+        $data = [
             'status' => 'pending',
+            'retries' => ++$this->retries,
             'error_message' => null,
             'error_stack_trace' => null,
             'duration' => null,
@@ -41,15 +43,19 @@ trait HasStatusesFeatures
             'completed_at' => null,
             'sequencial_id' => null,
             'hostname' => null,
-        ]);
+        ];
+
+        if (isset($retryAfter)) {
+            $data['dispatch_after'] = $retryAfter;
+        }
+
+        $this->update($data);
     }
 
-    public function updateToRollbacked()
+    public function updateToRollback()
     {
-        $this->updateToReseted();
-
         $this->update([
-            'status' => 'rollbacked',
+            'status' => 'rollback',
         ]);
     }
 
@@ -59,7 +65,7 @@ trait HasStatusesFeatures
             // Update the current job to 'failed'
             $this->update([
                 'status' => 'failed',
-                'error_message' => $e->getMessage().' (line '.$e->getLine().')',
+                'error_message' => $e->getFile().' - '.$e->getMessage().' (line '.$e->getLine().')',
                 'error_stack_trace' => $e->getTraceAsString(),
                 'completed_at' => now(),
             ]);

@@ -4,8 +4,8 @@ namespace Nidavellir\Thor\Concerns\CoreJobQueue;
 
 trait HasRefreshFeatures
 {
-    public function canBeRefreshed()
+    public function shouldBeRefreshed()
     {
-        return $this->created_at != $this->updated_at;
+        return $this->retries > 0;
     }
 }
