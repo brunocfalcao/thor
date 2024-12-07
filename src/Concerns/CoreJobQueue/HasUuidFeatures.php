@@ -6,13 +6,8 @@ use Illuminate\Support\Str;
 
 trait HasUuidFeatures
 {
-    public function generateBlockUuid()
+    public static function newUuid()
     {
-        $this->block_uuid = (string) Str::uuid();
-    }
-
-    public function generateJobUuid()
-    {
-        $this->job_uuid = (string) Str::uuid();
+        return (string) Str::uuid();
     }
 }

@@ -12,7 +12,7 @@ class Account extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
-        'is_suspended' => 'boolean',
+        'can_trade' => 'boolean',
         'credentials' => 'array',
     ];
 

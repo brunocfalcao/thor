@@ -26,8 +26,8 @@ trait HasIndexFeatures
             DB::transaction(function () {
                 $modelClass = get_class($this);
 
-                // Lock the table to prevent race conditions
-                $maxSequentialId = $modelClass::where('hostname', gethostname())->lockForUpdate()->max('sequencial_id');
+                // Use global lock to ensure no race conditions across hosts
+                $maxSequentialId = $modelClass::lockForUpdate()->max('sequencial_id');
 
                 $sequentialId = ($maxSequentialId ?? 0) + 1;
 
@@ -41,22 +41,32 @@ trait HasIndexFeatures
     {
         $modelClass = get_class($this);
 
-        // Return an empty collection if index is null
-        if (is_null($this->index)) {
+        // Return an empty collection if index is null or non-positive
+        if (is_null($this->index) || ! is_numeric($this->index) || $this->index <= 1) {
             return $modelClass::newCollection();
         }
 
         // Calculate the previous index
         $previousIndex = $this->index - 1;
 
-        if ($previousIndex <= 0) {
-            // If there's no valid previous index, return an empty collection
-            return $modelClass::newCollection();
-        }
-
         // Fetch all job queues with the previous index and the same block_uuid
         return $modelClass::where('block_uuid', $this->block_uuid)
             ->where('index', $previousIndex)
+            ->get();
+    }
+
+    public function getByCanonical(string $canonical)
+    {
+        $modelClass = get_class($this);
+
+        // Ensure the block_uuid exists before querying
+        if ($this->block_uuid == null) {
+            return $modelClass::newCollection();
+        }
+
+        // Fetch all job queues with the same block_uuid and canonical value
+        return $modelClass::where('block_uuid', $this->block_uuid)
+            ->where('canonical', $canonical)
             ->get();
     }
 }

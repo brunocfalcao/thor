@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('status')->default('pending');
             $table->string('queue')->nullable();
             $table->string('hostname')->nullable();
+            $table->string('canonical')->nullable();
 
             $table->uuid('block_uuid')->nullable();
             $table->uuid('job_uuid')->nullable();
@@ -104,8 +105,7 @@ return new class extends Migration
 
             $table->unsignedInteger('cmc_id');
 
-            $table->string('base_currency');
-            $table->string('quote_currency');
+            $table->string('token');
 
             $table->timestamps();
         });
@@ -120,11 +120,17 @@ return new class extends Migration
                 ->comment('The quote currency used to trade, needs to have a portfolio amount');
 
             $table->boolean('is_active')
-                ->default(true);
+                ->default(true)
+                ->comment('Global configuration to allow this account to trade. If the subscription is over, this attribute is false');
 
-            $table->boolean('is_suspended')
-                ->default(false)
-                ->comment('This is used by the system, to stop trades on this account. E.g.: If a drop is more than 3.5 percent, etc');
+            $table->boolean('can_trade')
+                ->default(true)
+                ->comment('This is used by the system, to temporarly stop trades on this account. E.g.: If a drop is more than 3.5 percent, other framework conditions, etc');
+
+            $table->unsignedInteger('monthly_profit_objective')
+                ->nullable()
+                ->default(null)
+                ->comment('The system will try to match this profit objective, and in case it is exceed it drops the trade percentage proportionally. If it doesnt achieve, it keeps the active trading configuration. Each week this can be adjusted by the system');
 
             $table->unsignedInteger('max_balance_percentage')
                 ->default(100)
@@ -239,8 +245,8 @@ return new class extends Migration
         Schema::create('symbols', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('cmc_id')->nullable();
-            $table->string('name');
             $table->string('token')->unique();
+            $table->string('name')->nullable();
             $table->string('category')->nullable();
             $table->string('website')->nullable();
             $table->longText('description')->nullable();

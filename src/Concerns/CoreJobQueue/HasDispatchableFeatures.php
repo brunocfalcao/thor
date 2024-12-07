@@ -106,9 +106,10 @@ trait HasDispatchableFeatures
         });
     }
 
-    protected static function instantiateJobWithArguments(string $class, array $arguments)
+    protected static function instantiateJobWithArguments(string $class, ?array $arguments)
     {
         try {
+            $arguments = $arguments ?? []; // Default to an empty array if $arguments is null
             $reflectionClass = new ReflectionClass($class);
             $constructor = $reflectionClass->getConstructor();
 

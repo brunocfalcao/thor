@@ -2,10 +2,10 @@
 
 namespace Nidavellir\Thor\Concerns\ApiSystem;
 
-trait HasApiSystemCollections
+trait HasCollections
 {
     public static function allExchanges()
     {
-        return static::where('is_exchange', false)->get();
+        return static::where('is_exchange', true)->get();
     }
 }

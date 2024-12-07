@@ -163,30 +163,27 @@ class SchemaSeeder1 extends Seeder
         ]);
 
         $tradingPairs = [
-            ['SOL-USDT', 5426],
-            ['DOGE-USDT', 74],
-            ['XRP-USDT', 52],
-            ['ADA-USDT', 2010],
-            ['TON-USDT', 11419],
-            ['AVAX-USDT', 5805],
-            ['LINK-USDT', 1975],
-            ['UNI-USDT', 7083],
-            ['AAVE-USDT', 7278],
-            ['NEO-USDT', 1376],
-            ['FIL-USDT', 2280],
-            ['TIA-USDT', 22861],
-            ['IMX-USDT', 10603],
-            ['QNT-USDT', 3155],
-            ['GALA-USDT', 7080],
-            ['JASMY-USDT', 8425],
+            ['SOL', 5426],
+            ['DOGE', 74],
+            ['XRP', 52],
+            ['ADA', 2010],
+            ['TON', 11419],
+            ['AVAX', 5805],
+            ['LINK', 1975],
+            ['UNI', 7083],
+            ['AAVE', 7278],
+            ['NEO', 1376],
+            ['FIL', 2280],
+            ['TIA', 22861],
+            ['IMX', 10603],
+            ['QNT', 3155],
+            ['GALA', 7080],
+            ['JASMY', 8425],
         ];
 
         foreach ($tradingPairs as $pair) {
-            $parts = explode('-', $pair[0]);
-
             TradingPair::create([
-                'base_currency' => $parts[0],
-                'quote_currency' => $parts[1],
+                'token' => $pair[0],
                 'cmc_id' => $pair[1]]);
         }
 

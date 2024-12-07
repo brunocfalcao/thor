@@ -3,15 +3,13 @@
 namespace Nidavellir\Thor\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Nidavellir\Thor\Concerns\ApiSystem\HasApiSystemCollections;
+use Nidavellir\Mjolnir\Concerns\Models\ApiSystem\HasApiFeatures;
+use Nidavellir\Thor\Concerns\ApiSystem\HasCollections;
 
-/**
- * Defines the many-to-many relationship between
- * ApiSystem and User.
- */
 class ApiSystem extends Model
 {
-    use HasApiSystemCollections;
+    use HasApiFeatures;
+    use HasCollections;
 
     public function accounts()
     {
@@ -25,7 +23,7 @@ class ApiSystem extends Model
 
     public function exchangeSymbols()
     {
-        return $this->hasMany(ExchangeSymbol::class, 'api_system_id');
+        return $this->hasMany(ExchangeSymbol::class);
     }
 
     public function positions()
