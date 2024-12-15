@@ -3,12 +3,9 @@
 namespace Nidavellir\Thor\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ExchangeSymbol extends Model
 {
-    use SoftDeletes;
-
     protected $casts = [
         'is_active' => 'boolean',
         'is_upsertable' => 'boolean',
@@ -17,6 +14,11 @@ class ExchangeSymbol extends Model
         'leverage_brackets' => 'array',
         'indicators' => 'array',
     ];
+
+    public function tradeConfiguration()
+    {
+        return $this->belongsTo(TradeConfiguration::class);
+    }
 
     public function symbol()
     {

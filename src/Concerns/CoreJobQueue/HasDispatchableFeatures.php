@@ -2,7 +2,6 @@
 
 namespace Nidavellir\Thor\Concerns\CoreJobQueue;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
 use InvalidArgumentException;
 use ReflectionClass;
@@ -13,97 +12,98 @@ trait HasDispatchableFeatures
 {
     public static function dispatch()
     {
-        DB::transaction(function () {
-            // Step 1: Handle jobs without an index first
-            $jobsWithoutIndex = self::where('status', 'pending')
-                ->whereNull('index')
+        // Step 1: Handle jobs without an index first
+        $jobsWithoutIndex = self::where('status', 'pending')
+            ->whereNull('index')
+            ->where(function ($query) {
+                $query->whereNull('dispatch_after')
+                    ->orWhere('dispatch_after', '<=', now());
+            })
+            ->lockForUpdate()
+            ->get();
+
+        foreach ($jobsWithoutIndex as $job) {
+            $job->updateToDispatched();
+
+            // Instantiate the job with properly resolved arguments
+            $jobInstance = self::instantiateJobWithArguments($job->class, $job->arguments);
+
+            // Attach the job instance to the coreJobQueue
+            $jobInstance->coreJobQueue = $job;
+
+            // Dispatch the job
+            Queue::pushOn($job->queue, $jobInstance);
+        }
+
+        // Step 2: Handle indexed jobs by block_uuid
+        $blocks = self::where('status', 'pending')
+            ->whereNotNull('index')
+            ->groupBy('block_uuid')
+            ->pluck('block_uuid');
+
+        foreach ($blocks as $blockUuid) {
+            // Start processing indices for the current block
+            $nextIndex = self::where('block_uuid', $blockUuid)
+                ->where('status', 'pending')
                 ->where(function ($query) {
                     $query->whereNull('dispatch_after')
                         ->orWhere('dispatch_after', '<=', now());
                 })
-                ->lockForUpdate()
-                ->get();
+                ->min('index'); // Get the lowest pending index eligible for dispatch
 
-            foreach ($jobsWithoutIndex as $job) {
-                $job->updateToDispatched();
+            while ($nextIndex !== null) {
+                // Check if all jobs in lower indices are completed
+                $incompleteJobs = self::where('block_uuid', $blockUuid)
+                    ->where('index', '<', $nextIndex)
+                    ->whereNotIn('status', ['completed', 'cancelled'])
+                    ->exists();
 
-                // Instantiate the job with properly resolved arguments
-                $jobInstance = self::instantiateJobWithArguments($job->class, $job->arguments);
+                if ($incompleteJobs) {
+                    break; // Wait until all jobs in previous indices are completed
+                }
 
-                // Attach the job instance to the coreJobQueue
-                $jobInstance->coreJobQueue = $job;
+                // Fetch all jobs in the next index
+                $jobsToDispatch = self::where('block_uuid', $blockUuid)
+                    ->where('index', $nextIndex)
+                    ->where('status', 'pending')
+                    ->where(function ($query) {
+                        $query->whereNull('dispatch_after')
+                            ->orWhere('dispatch_after', '<=', now());
+                    })
+                    ->lockForUpdate()
+                    ->get();
 
-                // Dispatch the job
-                Queue::pushOn($job->queue, $jobInstance);
-            }
+                if ($jobsToDispatch->isEmpty()) {
+                    break; // No jobs to dispatch for this index
+                }
 
-            // Step 2: Handle indexed jobs by block_uuid
-            $blocks = self::where('status', 'pending')
-                ->whereNotNull('index')
-                ->groupBy('block_uuid')
-                ->pluck('block_uuid');
+                // Dispatch all jobs for the current index in parallel
+                foreach ($jobsToDispatch as $job) {
+                    $job->updateToDispatched();
 
-            foreach ($blocks as $blockUuid) {
-                // Start processing indices for the current block
+                    // Instantiate the job with properly resolved arguments
+                    $jobInstance = self::instantiateJobWithArguments($job->class, $job->arguments);
+
+                    // Attach the job instance to the coreJobQueue
+                    $jobInstance->coreJobQueue = $job;
+
+                    if ($job->queue == 'sync') {
+                        $jobInstance->handle();
+                    } else { // Dispatch the job
+                        Queue::pushOn($job->queue, $jobInstance);
+                    }
+                }
+
+                // Move to the next index
                 $nextIndex = self::where('block_uuid', $blockUuid)
                     ->where('status', 'pending')
                     ->where(function ($query) {
                         $query->whereNull('dispatch_after')
                             ->orWhere('dispatch_after', '<=', now());
                     })
-                    ->min('index'); // Get the lowest pending index eligible for dispatch
-
-                while ($nextIndex !== null) {
-                    // Check if all jobs in lower indices are completed
-                    $incompleteJobs = self::where('block_uuid', $blockUuid)
-                        ->where('index', '<', $nextIndex)
-                        ->whereNotIn('status', ['completed', 'cancelled'])
-                        ->exists();
-
-                    if ($incompleteJobs) {
-                        break; // Wait until all jobs in previous indices are completed
-                    }
-
-                    // Fetch all jobs in the next index
-                    $jobsToDispatch = self::where('block_uuid', $blockUuid)
-                        ->where('index', $nextIndex)
-                        ->where('status', 'pending')
-                        ->where(function ($query) {
-                            $query->whereNull('dispatch_after')
-                                ->orWhere('dispatch_after', '<=', now());
-                        })
-                        ->lockForUpdate()
-                        ->get();
-
-                    if ($jobsToDispatch->isEmpty()) {
-                        break; // No jobs to dispatch for this index
-                    }
-
-                    // Dispatch all jobs for the current index in parallel
-                    foreach ($jobsToDispatch as $job) {
-                        $job->updateToDispatched();
-
-                        // Instantiate the job with properly resolved arguments
-                        $jobInstance = self::instantiateJobWithArguments($job->class, $job->arguments);
-
-                        // Attach the job instance to the coreJobQueue
-                        $jobInstance->coreJobQueue = $job;
-
-                        // Dispatch the job
-                        Queue::pushOn($job->queue, $jobInstance);
-                    }
-
-                    // Move to the next index
-                    $nextIndex = self::where('block_uuid', $blockUuid)
-                        ->where('status', 'pending')
-                        ->where(function ($query) {
-                            $query->whereNull('dispatch_after')
-                                ->orWhere('dispatch_after', '<=', now());
-                        })
-                        ->min('index');
-                }
+                    ->min('index');
             }
-        });
+        }
     }
 
     protected static function instantiateJobWithArguments(string $class, ?array $arguments)

@@ -9,6 +9,7 @@ class ApiRequestLog extends Model
     protected $table = 'api_requests_log';
 
     protected $casts = [
+        'debug_data' => 'array',
         'payload' => 'array',
         'http_headers_sent' => 'array',
         'response' => 'array',

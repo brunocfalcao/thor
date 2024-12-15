@@ -11,7 +11,17 @@ class Symbol extends Model
 
     protected $casts = [
         'indicator_last_synced_at' => 'datetime',
+        'exchange_canonicals' => 'array',
     ];
+
+    public function getExchangeCanonicalAttribute(ApiSystem $apiSystem)
+    {
+        if (array_key_exists($apiSystem->canonical, $this->exchange_canonicals)) {
+            return $this->exchange_canonicals[$apiSystem->canonical];
+        }
+
+        return $this->token;
+    }
 
     public function exchangeSymbols()
     {

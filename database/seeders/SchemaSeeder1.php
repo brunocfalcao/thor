@@ -9,12 +9,10 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Nidavellir\Thor\Models\Account;
 use Nidavellir\Thor\Models\ApiSystem;
-use Nidavellir\Thor\Models\ExchangeSymbol;
 use Nidavellir\Thor\Models\Indicator;
 use Nidavellir\Thor\Models\Order;
 use Nidavellir\Thor\Models\Position;
 use Nidavellir\Thor\Models\Quote;
-use Nidavellir\Thor\Models\Symbol;
 use Nidavellir\Thor\Models\TradeConfiguration;
 use Nidavellir\Thor\Models\TradingPair;
 use Nidavellir\Thor\Models\User;
@@ -97,14 +95,10 @@ class SchemaSeeder1 extends Seeder
         ]);
 
         TradeConfiguration::create([
-            'is_active' => true,
+            'is_default' => true,
             'canonical' => 'standard',
             'description' => 'average limit orders + final at 31.45',
-            'negative_pnl_stop_threshold' => 3.5,
-            'max_concurrent_trades' => 6,
-            'minimum_margin' => 50,
-            'position_size_percentage' => 6.5,
-            'max_leverage_ratio' => 20,
+            'indicator_timeframes' => ['1h', '4h', '6h', '12h', '1d'],
             'order_ratios' => [
                 'MARKET' => [0, 32],
 
@@ -120,14 +114,9 @@ class SchemaSeeder1 extends Seeder
         ]);
 
         TradeConfiguration::create([
-            'is_active' => false,
+            'is_default' => false,
             'canonical' => 'testing',
             'description' => 'Trade configuration for testing purposes',
-            'negative_pnl_stop_threshold' => 3.5,
-            'max_concurrent_trades' => 2,
-            'minimum_margin' => 40,
-            'position_size_percentage' => 6.5,
-            'max_leverage_ratio' => 20,
             'order_ratios' => [
                 'MARKET' => [0, 32],
 
@@ -162,29 +151,116 @@ class SchemaSeeder1 extends Seeder
             'name' => 'USDC (USD Coin)',
         ]);
 
+        // Meme coins.
         $tradingPairs = [
-            ['SOL', 5426],
-            ['DOGE', 74],
-            ['XRP', 52],
-            ['ADA', 2010],
-            ['TON', 11419],
-            ['AVAX', 5805],
-            ['LINK', 1975],
-            ['UNI', 7083],
-            ['AAVE', 7278],
-            ['NEO', 1376],
-            ['FIL', 2280],
-            ['TIA', 22861],
-            ['IMX', 10603],
-            ['QNT', 3155],
-            ['GALA', 7080],
-            ['JASMY', 8425],
+            ['DOGE', '74'],
+            ['SHIB', '5994', '1000SHIB'],
+            ['PEPE', '24478', '1000PEPE'],
+            ['BONK', '23095', '1000BONK'],
+            ['WIF', '28752'],
+            ['FLOKI', '10804', '1000FLOKI'],
+            ['BRETT', '29743'],
+            ['MOG', '27659', '1000000MOG'],
+            ['PNUT', '33788'],
+            ['POPCAT', '28782'],
         ];
 
         foreach ($tradingPairs as $pair) {
-            TradingPair::create([
+            $data = [
                 'token' => $pair[0],
-                'cmc_id' => $pair[1]]);
+                'cmc_id' => $pair[1],
+                'category_canonical' => 'meme',
+            ];
+
+            if (array_key_exists(2, $pair)) {
+                $data['exchange_canonicals'] = ['binance' => $pair[2]];
+            }
+
+            TradingPair::create($data);
+        }
+
+        // Defi coins.
+        $tradingPairs = [
+            ['AVAX', '5805'],
+            ['LINK', '1975'],
+            ['UNI', '7083'],
+            ['AAVE', '7278'],
+            ['ENA', '30171'],
+            ['MKR', '1518'],
+            ['STX', '4847'],
+            ['INJ', '7226'],
+            ['GRT', '6719'],
+            ['RUNE', '4157'],
+        ];
+
+        foreach ($tradingPairs as $pair) {
+            $data = [
+                'token' => $pair[0],
+                'cmc_id' => $pair[1],
+                'category_canonical' => 'defi',
+            ];
+
+            if (array_key_exists(2, $pair)) {
+                $data['exchange_canonicals'] = ['binance' => $pair[2]];
+            }
+
+            TradingPair::create($data);
+        }
+
+        // Gaming coins.
+        $tradingPairs = [
+            ['IMX', '10603'],
+            ['GALA', '7080'],
+            ['SAND', '6210'],
+            ['EGLD', '6892'],
+            ['MANA', '1966'],
+            ['AXS', '6783'],
+            ['APE', '18876'],
+            ['SUPER', '8290'],
+            ['NOT', '28850'],
+            ['RON', '14101'],
+        ];
+
+        foreach ($tradingPairs as $pair) {
+            $data = [
+                'token' => $pair[0],
+                'cmc_id' => $pair[1],
+                'category_canonical' => 'gaming',
+            ];
+
+            if (array_key_exists(2, $pair)) {
+                $data['exchange_canonicals'] = ['binance' => $pair[2]];
+            }
+
+            TradingPair::create($data);
+        }
+
+        // Top 20 coins.
+        $tradingPairs = [
+            ['XRP', '52'],
+            ['SOL', '5426'],
+            ['BNB', '1839'],
+            ['ADA', '2010'],
+            ['TON', '11419'],
+            ['SUI', '20947'],
+            ['ICP', '8916'],
+            ['AAVE', '7278'],
+            ['XLM', '512'],
+            ['RENDER', '5690'],
+        ];
+
+        foreach ($tradingPairs as $pair) {
+            $data = [
+                'token' => $pair[0],
+                'cmc_id' => $pair[1],
+                'category_canonical' => 'top20',
+            ];
+
+            if (array_key_exists(2, $pair)) {
+                $data['exchange_canonicals'] = ['binance' => $pair[2]];
+            }
+
+            TradingPair::create($data);
         }
 
         $binance = ApiSystem::create([
@@ -223,6 +299,13 @@ class SchemaSeeder1 extends Seeder
         Account::create([
             'user_id' => $trader->id,
             'api_system_id' => $binance->id,
+
+            'minimum_margin' => 1,
+            'max_concurrent_trades' => 6,
+            'position_size_percentage' => 5,
+            'max_margin_ratio' => 20,
+            'negative_pnl_stop_threshold' => 15,
+
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
             'max_balance_percentage' => 75,
             'credentials' => [
@@ -233,6 +316,13 @@ class SchemaSeeder1 extends Seeder
         Account::create([
             'user_id' => $admin->id,
             'api_system_id' => $binance->id,
+
+            'minimum_margin' => 1,
+            'max_concurrent_trades' => 6,
+            'position_size_percentage' => 5,
+            'max_margin_ratio' => 20,
+            'negative_pnl_stop_threshold' => 15,
+
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
             'max_balance_percentage' => 75,
             'credentials' => [
@@ -244,7 +334,6 @@ class SchemaSeeder1 extends Seeder
             'user_id' => $admin->id,
             'api_system_id' => $coinmarketcap->id,
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
-            'max_balance_percentage' => 0,
             'credentials' => [
                 'api_key' => Crypt::encrypt(env('COINMARKETCAP_API_KEY')),
             ],
@@ -254,7 +343,6 @@ class SchemaSeeder1 extends Seeder
             'user_id' => $admin->id,
             'api_system_id' => $taapi->id,
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
-            'max_balance_percentage' => 0,
             'credentials' => [
                 'secret' => Crypt::encrypt(env('TAAPI_SECRET')),
             ],
@@ -263,7 +351,6 @@ class SchemaSeeder1 extends Seeder
         Account::create([
             'user_id' => $admin->id,
             'api_system_id' => $alternativeMe->id,
-            'max_balance_percentage' => 0,
         ]);
 
         // Stubs.
@@ -286,21 +373,6 @@ class SchemaSeeder1 extends Seeder
             'exchange_symbol_id' => 1,
             'status' => 'closed',
             'direction' => 'LONG',
-        ]);
-
-        Symbol::create([
-            'cmc_id' => 2280,
-            'name' => 'Filecoin',
-            'token' => 'FIL',
-        ]);
-
-        ExchangeSymbol::create([
-            'symbol_id' => 1,
-            'quote_id' => 1,
-            'api_system_id' => 1,
-            'price_precision' => 3,
-            'quantity_precision' => 1,
-            'tick_size' => 0.001,
         ]);
     }
 }

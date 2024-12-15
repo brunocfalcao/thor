@@ -72,14 +72,17 @@ return new class extends Migration
         Schema::create('trade_configuration', function (Blueprint $table) {
             $table->id();
 
-            $table->boolean('is_active')->default(1);
+            $table->boolean('is_default')->default(1);
 
-            $table->unsignedInteger('max_concurrent_trades');
-            $table->decimal('minimum_margin', 20, 8);
-            $table->decimal('position_size_percentage', 5, 2);
-            $table->unsignedInteger('max_leverage_ratio');
-            $table->decimal('negative_pnl_stop_threshold', 5, 2);
             $table->unsignedInteger('fng_index')->nullable();
+
+            $table->unsignedInteger('fng_profit_booster_threshold')
+                ->default(30)
+                ->comment('When the fng is <= or >= (100-this value) then the profit booster is applied');
+
+            $table->decimal('profit_booster', 3, 3)
+                ->default(0.25)
+                ->comment('If the fng index >=70 or <=30, then the profit booster will be added to the profit order percentage');
 
             $table->string('canonical')->unique();
             $table->text('order_ratios');
@@ -104,8 +107,9 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedInteger('cmc_id');
-
             $table->string('token');
+            $table->json('exchange_canonicals')->nullable();
+            $table->string('category_canonical');
 
             $table->timestamps();
         });
@@ -127,14 +131,26 @@ return new class extends Migration
                 ->default(true)
                 ->comment('This is used by the system, to temporarly stop trades on this account. E.g.: If a drop is more than 3.5 percent, other framework conditions, etc');
 
-            $table->unsignedInteger('monthly_profit_objective')
+            $table->unsignedInteger('max_concurrent_trades')->nullable();
+            $table->decimal('minimum_margin', 20, 8)->nullable()
+                ->comment('The minimum absolute margin to open a position, without leverage');
+
+            $table->decimal('position_size_percentage', 5, 2)->nullable()
+                ->comment('The margin percentage that will be used on each position, without leverage');
+
+            $table->unsignedInteger('max_margin_ratio')->nullable()
+                ->comment('The max leverage that the position can use, inside the leverage bracket amount');
+
+            $table->decimal('negative_pnl_stop_threshold', 5, 2)->nullable()
+                ->comment('How much percentage the account can have a negative PnL, before the system stops opening new positions');
+
+            $table->decimal('monthly_profit_objective', 8, 2)
                 ->nullable()
-                ->default(null)
                 ->comment('The system will try to match this profit objective, and in case it is exceed it drops the trade percentage proportionally. If it doesnt achieve, it keeps the active trading configuration. Each week this can be adjusted by the system');
 
             $table->unsignedInteger('max_balance_percentage')
-                ->default(100)
-                ->comment('This is the maximum allowed portfolio percentage for the ');
+                ->nullable()
+                ->comment('This is the maximum allowed portfolio percentage for the account');
 
             $table->json('credentials')
                 ->nullable();
@@ -186,6 +202,8 @@ return new class extends Migration
 
             $table->unsignedBigInteger('loggable_id')->nullable();
             $table->integer('http_response_code')->nullable();
+
+            $table->json('debug_data')->nullable();
 
             $table->string('loggable_type')->nullable();
             $table->string('path')->nullable();
@@ -247,10 +265,14 @@ return new class extends Migration
             $table->unsignedInteger('cmc_id')->nullable();
             $table->string('token')->unique();
             $table->string('name')->nullable();
+            $table->string('category_canonical');
             $table->string('category')->nullable();
             $table->string('website')->nullable();
             $table->longText('description')->nullable();
             $table->string('image_url')->nullable();
+            $table->json('exchange_canonicals')
+                ->nullable()
+                ->comment('In case the symbol canonical differs from exchange to exchange, we can use it here canonical - token name');
 
             $table->timestamps();
         });
@@ -259,6 +281,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('symbol_id');
             $table->foreignId('quote_id');
+            $table->foreignId('trade_configuration_id');
 
             $table->boolean('is_active')
                 ->default(true)
@@ -291,7 +314,6 @@ return new class extends Migration
             $table->timestamp('indicators_last_synced_at')->nullable();
             $table->timestamp('price_last_synced_at')->nullable();
             $table->timestamps();
-            $table->softDeletes();
 
             $table->unique(['symbol_id', 'api_system_id', 'quote_id']);
             $table->index('last_mark_price');

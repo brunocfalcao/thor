@@ -26,9 +26,4 @@ class CoreJobQueue extends Model
         'extra_data' => 'array',
         'response' => 'array',
     ];
-
-    public function ApiJobQueues()
-    {
-        return $this->hasMany(ApiJobQueue::class);
-    }
 }
