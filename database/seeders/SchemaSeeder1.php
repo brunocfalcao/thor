@@ -29,6 +29,13 @@ class SchemaSeeder1 extends Seeder
         $indicator_timeframes = config('excalibur.apis.taapi.timeframes');
 
         Indicator::create([
+            'canonical' => 'emas-same-direction',
+            'is_active' => true,
+            'class' => "Nidavellir\Mjolnir\Indicators\EMAsSameDirection",
+            'is_apiable' => false,
+        ]);
+
+        Indicator::create([
             'canonical' => 'macd',
             'is_active' => false,
             'class' => "Nidavellir\Mjolnir\Indicators\MACDIndicator",
@@ -72,6 +79,7 @@ class SchemaSeeder1 extends Seeder
         // Add a new indicator EMAsConvergence.
         Indicator::create([
             'canonical' => 'emas-convergence',
+            'is_active' => false,
             'class' => "Nidavellir\Mjolnir\Indicators\EMAsConvergence",
             'is_apiable' => false,
         ]);
@@ -91,6 +99,15 @@ class SchemaSeeder1 extends Seeder
             'parameters' => [
                 'results' => 2,
                 'period' => '160',
+            ],
+        ]);
+
+        Indicator::create([
+            'canonical' => 'ema-240',
+            'class' => "Nidavellir\Mjolnir\Indicators\EMAIndicator",
+            'parameters' => [
+                'results' => 2,
+                'period' => '240',
             ],
         ]);
 

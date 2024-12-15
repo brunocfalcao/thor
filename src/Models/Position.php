@@ -2,6 +2,7 @@
 
 namespace Nidavellir\Thor\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Nidavellir\Thor\Concerns\Position\HasStatusesFeatures;
 use Nidavellir\Thor\Concerns\Position\HasTokenFeatures;
@@ -38,5 +39,14 @@ class Position extends Model
     public function tradeConfiguration()
     {
         return $this->belongsTo(TradeConfiguration::class);
+    }
+
+    /**
+     * Returns positions that are "in opening" status, meaning new ones
+     * (not yet synced) or in 'active' (meaning fully synced).
+     */
+    public function scopeOpened(Builder $query)
+    {
+        $query->whereIn('positions.status', ['new', 'active']);
     }
 }

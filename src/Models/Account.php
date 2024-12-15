@@ -2,6 +2,7 @@
 
 namespace Nidavellir\Thor\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Nidavellir\Mjolnir\Concerns\Models\Account\HasApiFeatures;
@@ -39,5 +40,10 @@ class Account extends Model
     public function rateLimits()
     {
         return $this->hasMany(RateLimit::class);
+    }
+
+    public function scopeActive(Builder $query)
+    {
+        $query->where('accounts.is_active', true);
     }
 }
