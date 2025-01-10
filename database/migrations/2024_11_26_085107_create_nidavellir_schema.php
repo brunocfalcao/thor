@@ -74,18 +74,13 @@ return new class extends Migration
 
             $table->boolean('is_default')->default(1);
 
-            $table->unsignedInteger('fng_index')->nullable();
-
-            $table->unsignedInteger('fng_profit_booster_threshold')
-                ->default(30)
-                ->comment('When the fng is <= or >= (100-this value) then the profit booster is applied');
-
-            $table->decimal('profit_booster', 3, 3)
-                ->default(0.25)
-                ->comment('If the fng index >=70 or <=30, then the profit booster will be added to the profit order percentage');
+            $table->string('direction_priority')
+                ->nullable()
+                ->comment('This direction will be the priority to select the next tokens, in case they exist. This will allow the bot to select the wrong direction even if the conclusion is the good one');
 
             $table->string('canonical')->unique();
             $table->text('order_ratios');
+            $table->decimal('profit_percentage', 5, 3);
             $table->json('indicator_timeframes')->nullable()
                 ->comment('Indicator timeframes considered for the trade configuration');
 
@@ -107,7 +102,7 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedInteger('cmc_id');
-            $table->string('token');
+            $table->string('token')->unique();
             $table->json('exchange_canonicals')->nullable();
             $table->string('category_canonical');
 
@@ -131,9 +126,13 @@ return new class extends Migration
                 ->default(true)
                 ->comment('This is used by the system, to temporarly stop trades on this account. E.g.: If a drop is more than 3.5 percent, other framework conditions, etc');
 
+            $table->boolean('follow_btc_indicator')
+                ->default(false)
+                ->comment('If true, then it will give priority to select tokens aligned with the BTC indicator result from the exchange symbols');
+
             $table->unsignedInteger('max_concurrent_trades')->nullable();
-            $table->decimal('minimum_margin', 20, 8)->nullable()
-                ->comment('The minimum absolute margin to open a position, without leverage');
+            $table->unsignedBigInteger('minimum_balance')->nullable()
+                ->comment('The minimum available balance to open a new position');
 
             $table->decimal('position_size_percentage', 5, 2)->nullable()
                 ->comment('The margin percentage that will be used on each position, without leverage');
@@ -340,9 +339,6 @@ return new class extends Migration
             $table->boolean('is_active')
                 ->default(false);
 
-            $table->boolean('is_active_overrided')
-                ->default(false);
-
             $table->boolean('is_admin')
                 ->default(false);
 
@@ -357,13 +353,11 @@ return new class extends Migration
 
             $table->uuid();
 
-            $table->boolean('is_syncing')->default(false)
-                ->comment('Each time we are syncing any cascading data on the order, the is_syncing needs to be false. Else, true');
-
             $table->string('type')
                 ->comment('PROFIT, MARKET, LIMIT, CANCEL-MARKET');
 
             $table->string('status')
+                ->default('NEW')
                 ->nullable()
                 ->comment('The order status (filled, cancelled, new, etc)');
 
@@ -375,6 +369,7 @@ return new class extends Migration
                 ->comment('The exchange system order id');
 
             $table->decimal('quantity', 20, 8)
+                ->nullable()
                 ->comment('The order initial or filled quantity, depending on the order status');
 
             $table->decimal('price', 20, 8)
@@ -394,22 +389,22 @@ return new class extends Migration
 
             $table->foreignId('account_id');
 
-            $table->foreignId('trade_configuration_id')->nullable()
-                ->comment('Trade configuration being used for this position');
-
             $table->foreignId('exchange_symbol_id')->nullable();
 
             $table->string('status')->default('new')
                 ->comment('The position status: new (never synced/syncing), active (totally synced), closed (synced, but no longer active), cancelled (there was an error or was compulsively cancelled)');
 
-            $table->boolean('is_syncing')->default(false)
-                ->comment('Each time we are syncing any cascading data on the position, the is_syncing needs to be false. Else, true');
-
             $table->string('direction')->nullable()
                 ->comment('The position direction: LONG, or SHORT');
 
+            $table->uuid();
+
             $table->timestamp('started_at')->nullable();
             $table->timestamp('closed_at')->nullable();
+
+            $table->boolean('wap_triggered')
+                ->default(false)
+                ->comment('If a WAP was just triggered this will be true, allowing the order observer not to put back the profit order on its previous price and quantity');
 
             $table->decimal('opening_price', 20, 8)
                 ->nullable()
@@ -417,11 +412,11 @@ return new class extends Migration
 
             $table->decimal('closing_price', 20, 8)
                 ->nullable()
-                ->comment('The current exchange symbol mark price when the position was closed');
+                ->comment('The last profit price');
 
             $table->decimal('realized_pnl', 20, 8)
                 ->nullable()
-                ->comment('The realized PnL given by the exchange');
+                ->comment('The realized PnL given by the exchange api');
 
             $table->longText('order_ratios')->nullable()
                 ->comment('The trade configuration (profit, limit, market, etc)');
@@ -430,9 +425,6 @@ return new class extends Migration
                 ->comment('The position margin (meaning the portfolio amount without leverage)');
 
             $table->unsignedTinyInteger('leverage')->nullable();
-
-            $table->decimal('notional', 20, 8)->nullable()
-                ->comment('The position margin with computed leverage');
 
             $table->decimal('profit_percentage', 6, 3)->nullable()
                 ->comment('The profit percentage obtained from the trade configuration');
@@ -446,6 +438,10 @@ return new class extends Migration
 
         Artisan::call('db:seed', [
             '--class' => Nidavellir\Thor\Database\Seeders\SchemaSeeder1::class,
+        ]);
+
+        Artisan::call('db:seed', [
+            '--class' => Nidavellir\Thor\Database\Seeders\TestingSeeder::class,
         ]);
     }
 };

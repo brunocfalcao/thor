@@ -4,17 +4,20 @@ namespace Nidavellir\Thor\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Nidavellir\Mjolnir\Concerns\Models\Position\HasApiFeatures;
+use Nidavellir\Mjolnir\Concerns\Models\Position\HasTokenParsingFeatures;
+use Nidavellir\Mjolnir\Concerns\Models\Position\HasWAPFeatures;
 use Nidavellir\Thor\Concerns\Position\HasStatusesFeatures;
-use Nidavellir\Thor\Concerns\Position\HasTokenFeatures;
 
 class Position extends Model
 {
+    use HasApiFeatures;
     use HasStatusesFeatures;
-    use HasTokenFeatures;
+    use HasTokenParsingFeatures;
+    use HasWAPFeatures;
 
     protected $casts = [
-        'is_syncing' => 'boolean',
-        'is_locked' => 'boolean',
+        'wap_triggered' => 'boolean',
         'order_ratios' => 'array',
         'started_at' => 'datetime',
         'closed_at' => 'datetime',
@@ -48,5 +51,10 @@ class Position extends Model
     public function scopeOpened(Builder $query)
     {
         $query->whereIn('positions.status', ['new', 'active']);
+    }
+
+    public function scopeFromAccount(Builder $query, Account $account)
+    {
+        $query->where('positions.account_id', $account->id);
     }
 }

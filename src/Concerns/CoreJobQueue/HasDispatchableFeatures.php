@@ -19,7 +19,6 @@ trait HasDispatchableFeatures
                 $query->whereNull('dispatch_after')
                     ->orWhere('dispatch_after', '<=', now());
             })
-            ->lockForUpdate()
             ->get();
 
         foreach ($jobsWithoutIndex as $job) {
@@ -51,7 +50,7 @@ trait HasDispatchableFeatures
                 })
                 ->min('index'); // Get the lowest pending index eligible for dispatch
 
-            while ($nextIndex !== null) {
+            while ($nextIndex != null) {
                 // Check if all jobs in lower indices are completed
                 $incompleteJobs = self::where('block_uuid', $blockUuid)
                     ->where('index', '<', $nextIndex)
@@ -70,7 +69,6 @@ trait HasDispatchableFeatures
                         $query->whereNull('dispatch_after')
                             ->orWhere('dispatch_after', '<=', now());
                     })
-                    ->lockForUpdate()
                     ->get();
 
                 if ($jobsToDispatch->isEmpty()) {

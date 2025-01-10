@@ -12,6 +12,7 @@ class Account extends Model
     use HasApiFeatures, SoftDeletes;
 
     protected $casts = [
+        'follow_btc_indicator' => 'boolean',
         'is_active' => 'boolean',
         'can_trade' => 'boolean',
         'credentials' => 'array',
@@ -45,5 +46,10 @@ class Account extends Model
     public function scopeActive(Builder $query)
     {
         $query->where('accounts.is_active', true);
+    }
+
+    public function scopeCanTrade(Builder $query)
+    {
+        $query->where('accounts.can_trade', true);
     }
 }

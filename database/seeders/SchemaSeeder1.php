@@ -6,12 +6,9 @@ namespace Nidavellir\Thor\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Nidavellir\Thor\Models\Account;
 use Nidavellir\Thor\Models\ApiSystem;
 use Nidavellir\Thor\Models\Indicator;
-use Nidavellir\Thor\Models\Order;
-use Nidavellir\Thor\Models\Position;
 use Nidavellir\Thor\Models\Quote;
 use Nidavellir\Thor\Models\TradeConfiguration;
 use Nidavellir\Thor\Models\TradingPair;
@@ -25,8 +22,6 @@ class SchemaSeeder1 extends Seeder
     public function run(): void
     {
         File::put(storage_path('logs/laravel.log'), '');
-
-        $indicator_timeframes = config('excalibur.apis.taapi.timeframes');
 
         Indicator::create([
             'canonical' => 'emas-same-direction',
@@ -114,44 +109,21 @@ class SchemaSeeder1 extends Seeder
         TradeConfiguration::create([
             'is_default' => true,
             'canonical' => 'standard',
-            'description' => 'average limit orders + final at 31.45',
-            'indicator_timeframes' => ['1h', '4h', '6h', '12h', '1d'],
+            'description' => 'Default 7.5% laddered',
+            'indicator_timeframes' => ['4h', '6h', '12h', '1d'],
             'order_ratios' => [
-                'MARKET' => [0, 32],
-
-                'LIMIT' => [
-                    [-8,  16],
-                    [-16,  8],
-                    [-24,  4],
-                    [-32,  2],
-                ],
-
-                'PROFIT' => [0.33, 1],
+                [-7.5,  16],
+                [-15,  8],
+                [-22.5,  4],
+                [-30,  2],
             ],
-        ]);
 
-        TradeConfiguration::create([
-            'is_default' => false,
-            'canonical' => 'testing',
-            'description' => 'Trade configuration for testing purposes',
-            'order_ratios' => [
-                'MARKET' => [0, 32],
-
-                'LIMIT' => [
-                    [-0.15,  16],
-                    [-16.07,  8],
-                    [-21.37,  4],
-                    [-29.953,  2],
-                ],
-
-                'PROFIT' => [0.15, 1],
-            ],
+            'profit_percentage' => 0.33,
         ]);
 
         $admin = User::create([
             'name' => env('ADMIN_USER_NAME'),
             'email' => env('ADMIN_USER_EMAIL'),
-            'is_active_overrided' => true,
             'is_admin' => true,
             'password' => env('ADMIN_USER_PASSWORD'),
             'pushover_key' => Crypt::encrypt(env('ADMIN_USER_PUSHOVER_KEY')),
@@ -167,6 +139,25 @@ class SchemaSeeder1 extends Seeder
             'canonical' => 'USDC',
             'name' => 'USDC (USD Coin)',
         ]);
+
+        // BTC.
+        $tradingPairs = [
+            ['BTC', '1'],
+        ];
+
+        foreach ($tradingPairs as $pair) {
+            $data = [
+                'token' => $pair[0],
+                'cmc_id' => $pair[1],
+                'category_canonical' => 'top20',
+            ];
+
+            if (array_key_exists(2, $pair)) {
+                $data['exchange_canonicals'] = ['binance' => $pair[2]];
+            }
+
+            TradingPair::create($data);
+        }
 
         // Meme coins.
         $tradingPairs = [
@@ -224,6 +215,34 @@ class SchemaSeeder1 extends Seeder
             TradingPair::create($data);
         }
 
+        // AI coins.
+        $tradingPairs = [
+            ['NEAR', '6535'],
+            ['ICP', '8916'],
+            ['VIRTUAL', '29420'],
+            ['RENDER', '5690'],
+            ['TAO', '22974'],
+            ['FET', '3773'],
+            ['FIL', '2280'],
+            ['THETA', '2416'],
+            ['GRASS', '32956'],
+            ['TURBO', '24911'],
+        ];
+
+        foreach ($tradingPairs as $pair) {
+            $data = [
+                'token' => $pair[0],
+                'cmc_id' => $pair[1],
+                'category_canonical' => 'ai',
+            ];
+
+            if (array_key_exists(2, $pair)) {
+                $data['exchange_canonicals'] = ['binance' => $pair[2]];
+            }
+
+            TradingPair::create($data);
+        }
+
         // Gaming coins.
         $tradingPairs = [
             ['IMX', '10603'],
@@ -260,10 +279,10 @@ class SchemaSeeder1 extends Seeder
             ['ADA', '2010'],
             ['TON', '11419'],
             ['SUI', '20947'],
-            ['ICP', '8916'],
-            ['AAVE', '7278'],
+            ['DOT', '6636'],
+            ['HBAR', '4642'],
             ['XLM', '512'],
-            ['RENDER', '5690'],
+            ['LTC', '2'],
         ];
 
         foreach ($tradingPairs as $pair) {
@@ -308,18 +327,42 @@ class SchemaSeeder1 extends Seeder
         $trader = User::create([
             'name' => env('TRADER_NAME'),
             'email' => env('TRADER_EMAIL'),
-            'is_active_overrided' => true,
             'password' => env('TRADER_PASSWORD'),
             'pushover_key' => Crypt::encrypt(env('TRADER_PUSHOVER_KEY')),
+        ]);
+
+        $karine = User::create([
+            'name' => env('KARINE_NAME'),
+            'email' => env('KARINE_EMAIL'),
+            'password' => env('KARINE_PASSWORD'),
+        ]);
+
+        Account::create([
+            'user_id' => $karine->id,
+            'api_system_id' => $binance->id,
+
+            'is_active' => false,
+
+            'minimum_balance' => 100,
+            'max_concurrent_trades' => 1,
+            'position_size_percentage' => 2,
+            'max_margin_ratio' => 10,
+            'negative_pnl_stop_threshold' => 25,
+
+            'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
+            'max_balance_percentage' => 75,
+            'credentials' => [
+                'api_key' => Crypt::encrypt(env('KARINE_BINANCE_API_KEY')),
+                'api_secret' => Crypt::encrypt(env('KARINE_BINANCE_API_SECRET'))],
         ]);
 
         Account::create([
             'user_id' => $trader->id,
             'api_system_id' => $binance->id,
 
-            'minimum_margin' => 1,
-            'max_concurrent_trades' => 6,
-            'position_size_percentage' => 5,
+            'minimum_balance' => 500,
+            'max_concurrent_trades' => 1,
+            'position_size_percentage' => 2,
             'max_margin_ratio' => 20,
             'negative_pnl_stop_threshold' => 15,
 
@@ -334,9 +377,9 @@ class SchemaSeeder1 extends Seeder
             'user_id' => $admin->id,
             'api_system_id' => $binance->id,
 
-            'minimum_margin' => 1,
-            'max_concurrent_trades' => 6,
-            'position_size_percentage' => 5,
+            'minimum_balance' => 500,
+            'max_concurrent_trades' => 0,
+            'position_size_percentage' => 0,
             'max_margin_ratio' => 20,
             'negative_pnl_stop_threshold' => 15,
 
@@ -368,28 +411,6 @@ class SchemaSeeder1 extends Seeder
         Account::create([
             'user_id' => $admin->id,
             'api_system_id' => $alternativeMe->id,
-        ]);
-
-        // Stubs.
-        // Insert Order stub.
-        $order = Order::create([
-            'position_id' => 1,
-            'uuid' => (string) Str::uuid(),
-            'type' => 'MARKET',
-            'status' => 'FILLED',
-            'quantity' => 2,
-            'price' => 10,
-            'side' => 'BUY',
-            'quantity' => 1,
-            'exchange_order_id' => 29917820287,
-        ]);
-
-        $position = Position::create([
-            'trade_configuration_id' => 4,
-            'account_id' => 1,
-            'exchange_symbol_id' => 1,
-            'status' => 'closed',
-            'direction' => 'LONG',
         ]);
     }
 }

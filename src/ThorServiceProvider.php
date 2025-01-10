@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Nidavellir\Thor\Concerns\AutoRegistersObserversAndPolicies;
+use Nidavellir\Thor\Models\CoreJobQueue;
+use Nidavellir\Thor\Observers\CoreJobQueueObserver;
 
 class ThorServiceProvider extends ServiceProvider
 {
@@ -14,8 +16,6 @@ class ThorServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->autoRegisterObservers();
-        $this->autoRegisterPolicies();
 
         DB::prohibitDestructiveCommands(
             $this->app->isProduction()
@@ -23,5 +23,12 @@ class ThorServiceProvider extends ServiceProvider
 
         Model::shouldBeStrict();
         Model::unguard();
+
+        $this->registerObservers();
+    }
+
+    protected function registerObservers()
+    {
+        CoreJobQueue::observe(CoreJobQueueObserver::class);
     }
 }

@@ -18,6 +18,7 @@ trait HasStatusesFeatures
     public function updateToCompleted()
     {
         $this->update([
+            'hostname' => gethostname(),
             'status' => 'completed',
             'completed_at' => now(),
         ]);
@@ -30,8 +31,16 @@ trait HasStatusesFeatures
         ]);
     }
 
-    public function updateToPending(?Carbon $retryAfter = null)
+    public function updateToRetry(Carbon|int|null $retryAfter = null)
     {
+        $dispatchAfter = null;
+
+        if ($retryAfter instanceof Carbon) {
+            $dispatchAfter = $retryAfter;
+        } elseif (is_int($retryAfter)) {
+            $dispatchAfter = now()->addSeconds($retryAfter);
+        }
+
         $data = [
             'status' => 'pending',
             'retries' => ++$this->retries,
@@ -44,8 +53,8 @@ trait HasStatusesFeatures
             'hostname' => null,
         ];
 
-        if (isset($retryAfter)) {
-            $data['dispatch_after'] = $retryAfter;
+        if ($dispatchAfter) {
+            $data['dispatch_after'] = $dispatchAfter;
         }
 
         $this->update($data);
@@ -79,5 +88,7 @@ trait HasStatusesFeatures
                     'status' => 'cancelled',
                 ]);
         }
+
+        // Notify failure via pushover.
     }
 }

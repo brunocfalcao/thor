@@ -2,10 +2,14 @@
 
 namespace Nidavellir\Thor\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Nidavellir\Mjolnir\Concerns\Models\ExchangeSymbol\HasApiFeatures;
 
 class ExchangeSymbol extends Model
 {
+    use HasApiFeatures;
+
     protected $casts = [
         'is_active' => 'boolean',
         'is_upsertable' => 'boolean',
@@ -33,5 +37,12 @@ class ExchangeSymbol extends Model
     public function apiSystem()
     {
         return $this->belongsTo(ApiSystem::class);
+    }
+
+    public function scopeTradeable(Builder $query)
+    {
+        $query->where('exchange_symbols.is_active', true)
+            ->where('exchange_symbols.is_upsertable', true)
+            ->where('exchange_symbols.is_tradeable', true);
     }
 }

@@ -4,13 +4,16 @@ namespace Nidavellir\Thor\Concerns\Position;
 
 trait HasStatusesFeatures
 {
-    public function changeToSyncing()
+    public function changeToActive()
     {
-        $this->is_syncing = true;
+        $this->update(['status' => 'active']);
     }
 
-    public function changeToSynced()
+    public function changeToClosed()
     {
-        $this->is_syncing = false;
+        $this->update([
+            'closed_at' => now(),
+            'status' => 'closed',
+        ]);
     }
 }

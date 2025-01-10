@@ -5,12 +5,12 @@ namespace Nidavellir\Thor\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Nidavellir\Thor\Concerns\User\HasNotificationFeatures;
 
 class User extends Authenticatable
 {
+    use HasNotificationFeatures;
     use Notifiable;
-
-    public string $pushover_application_key;
 
     protected $guarded = [];
 
@@ -28,7 +28,6 @@ class User extends Authenticatable
         'is_trader' => 'boolean',
         'is_active' => 'boolean',
         'is_admin' => 'boolean',
-        'is_active_overrided' => 'boolean',
 
         'password' => 'hashed',
     ];
