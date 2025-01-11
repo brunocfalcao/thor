@@ -3,6 +3,7 @@
 namespace Nidavellir\Thor\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Nidavellir\Thor\Concerns\User\HasNotificationFeatures;
@@ -45,5 +46,10 @@ class User extends Authenticatable
     public function rateLimits()
     {
         return $this->hasManyThrough(RateLimit::class, Account::class);
+    }
+
+    public function scopeAdmin(Builder $query)
+    {
+        $query->where('users.is_admin', true);
     }
 }

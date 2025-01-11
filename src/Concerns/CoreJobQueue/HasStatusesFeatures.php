@@ -3,6 +3,7 @@
 namespace Nidavellir\Thor\Concerns\CoreJobQueue;
 
 use Illuminate\Support\Carbon;
+use Nidavellir\Thor\Models\User;
 
 trait HasStatusesFeatures
 {
@@ -69,10 +70,12 @@ trait HasStatusesFeatures
 
     public function updateToFailed(\Throwable $e)
     {
-        // Update the current job to 'failed'
+        $errorMessage = $e->getFile().' - '.$e->getMessage().' (line '.$e->getLine().')';
+
+        // Update the current job to 'failed'.
         $this->update([
             'status' => 'failed',
-            'error_message' => $e->getFile().' - '.$e->getMessage().' (line '.$e->getLine().')',
+            'error_message' => $errorMessage,
             'error_stack_trace' => $e->getTraceAsString(),
             'completed_at' => now(),
         ]);
@@ -90,5 +93,10 @@ trait HasStatusesFeatures
         }
 
         // Notify failure via pushover.
+        User::where('is_admin', true)
+            ->get()
+            ->each(function ($user) use ($errorMessage) {
+                $user->pushover($errorMessage, 'Core Job Queue Error', 'nidavellir_errors', ['priority' => 1, 'sound' => 'siren']);
+            });
     }
 }
