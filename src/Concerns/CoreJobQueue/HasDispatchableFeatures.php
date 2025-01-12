@@ -72,6 +72,7 @@ trait HasDispatchableFeatures
                     ->get();
 
                 if ($jobsToDispatch->isEmpty()) {
+                    info('No jobs to dispatch');
                     break; // No jobs to dispatch for this index
                 }
 
@@ -88,6 +89,7 @@ trait HasDispatchableFeatures
                     if ($job->queue == 'sync') {
                         $jobInstance->handle();
                     } else { // Dispatch the job
+                        info('Queueing ' . $job->id);
                         Queue::pushOn($job->queue, $jobInstance);
                     }
                 }
