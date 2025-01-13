@@ -23,6 +23,17 @@ trait HasStatusesFeatures
             'status' => 'completed',
             'completed_at' => now(),
         ]);
+
+        if ($this->duration > 5000) {
+            // Send notification due to low performant core job queue processing.
+            User::admin()->get()->each(function ($user) {
+                $user->pushover(
+                    message: "[{$this->id}] - Slow processing - " . $this->duration . 'ms',
+                    title: 'Core Job Queue slow performance',
+                    applicationKey: 'nidavellir_warnings'
+                );
+            });
+        }
     }
 
     public function updateToDispatched()
