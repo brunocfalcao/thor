@@ -28,7 +28,7 @@ trait HasStatusesFeatures
             // Send notification due to low performant core job queue processing.
             User::admin()->get()->each(function ($user) {
                 $user->pushover(
-                    message: "[{$this->id}] - {$this->class} - Took " . $this->duration . 'ms',
+                    message: "[{$this->id}] - {$this->class} - Took ".$this->duration.'ms',
                     title: 'Core Job Queue slow performance',
                     applicationKey: 'nidavellir_warnings'
                 );

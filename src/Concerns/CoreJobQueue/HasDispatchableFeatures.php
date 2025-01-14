@@ -89,7 +89,7 @@ trait HasDispatchableFeatures
                     if ($job->queue == 'sync') {
                         $jobInstance->handle();
                     } else { // Dispatch the job
-                        info('Queueing ' . $job->id);
+                        info('Queueing '.$job->id);
                         Queue::pushOn($job->queue, $jobInstance);
                     }
                 }

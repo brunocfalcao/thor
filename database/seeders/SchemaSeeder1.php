@@ -346,7 +346,7 @@ class SchemaSeeder1 extends Seeder
             'minimum_balance' => 100,
             'max_concurrent_trades' => 1,
             'position_size_percentage' => 2,
-            'max_margin_ratio' => 10,
+            'max_leverage' => 10,
             'negative_pnl_stop_threshold' => 25,
 
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
@@ -363,7 +363,7 @@ class SchemaSeeder1 extends Seeder
             'minimum_balance' => 500,
             'max_concurrent_trades' => 1,
             'position_size_percentage' => 2,
-            'max_margin_ratio' => 20,
+            'max_leverage' => 20,
             'negative_pnl_stop_threshold' => 15,
 
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
@@ -380,7 +380,7 @@ class SchemaSeeder1 extends Seeder
             'minimum_balance' => 500,
             'max_concurrent_trades' => 0,
             'position_size_percentage' => 0,
-            'max_margin_ratio' => 20,
+            'max_leverage' => 20,
             'negative_pnl_stop_threshold' => 15,
 
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,

@@ -109,6 +109,26 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('account_balance_history', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('account_id');
+
+            $table->decimal('total_wallet_balance', 20, 5)
+                ->nullable();
+
+            $table->decimal('total_unrealized_profit', 20, 5)
+                ->nullable();
+
+            $table->decimal('total_maintenance_margin', 20, 5)
+                ->nullable();
+
+            $table->decimal('total_margin_balance', 20, 5)
+                ->nullable();
+
+            $table->timestamps();
+        });
+
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
 
@@ -137,11 +157,23 @@ return new class extends Migration
             $table->decimal('position_size_percentage', 5, 2)->nullable()
                 ->comment('The margin percentage that will be used on each position, without leverage');
 
-            $table->unsignedInteger('max_margin_ratio')->nullable()
+            $table->unsignedInteger('max_leverage')->nullable()
                 ->comment('The max leverage that the position can use, inside the leverage bracket amount');
 
             $table->decimal('negative_pnl_stop_threshold', 5, 2)->nullable()
                 ->comment('How much percentage the account can have a negative PnL, before the system stops opening new positions');
+
+            $table->decimal('total_wallet_balance', 20, 5)
+                ->nullable();
+
+            $table->decimal('total_unrealized_profit', 20, 5)
+                ->nullable();
+
+            $table->decimal('total_maintenance_margin', 20, 5)
+                ->nullable();
+
+            $table->decimal('total_margin_balance', 20, 5)
+                ->nullable();
 
             $table->decimal('monthly_profit_objective', 8, 2)
                 ->nullable()
