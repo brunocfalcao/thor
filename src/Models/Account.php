@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Nidavellir\Mjolnir\Concerns\Models\Account\HasApiFeatures;
+use Nidavellir\Thor\Concerns\Account\HasDrawDownFeatures;
 
 class Account extends Model
 {
-    use HasApiFeatures, SoftDeletes;
+    use HasApiFeatures, HasDrawDownFeatures, SoftDeletes;
 
     protected $casts = [
         'follow_btc_indicator' => 'boolean',
@@ -41,6 +42,11 @@ class Account extends Model
     public function rateLimits()
     {
         return $this->hasMany(RateLimit::class);
+    }
+
+    public function balanceHistory()
+    {
+        return $this->hasMany(AccountBalanceHistory::class);
     }
 
     public function scopeActive(Builder $query)
