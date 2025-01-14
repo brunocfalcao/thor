@@ -81,7 +81,7 @@ trait HasStatusesFeatures
 
     public function updateToFailed(\Throwable $e)
     {
-        $errorMessage = $e->getFile().' - '.$e->getMessage().' (line '.$e->getLine().')';
+        $errorMessage = $this->class.' - '.$e->getMessage().' (line '.$e->getLine().')';
 
         // Update the current job to 'failed'.
         $this->update([
