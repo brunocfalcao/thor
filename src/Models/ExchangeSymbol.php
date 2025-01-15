@@ -39,7 +39,7 @@ class ExchangeSymbol extends Model
         return $this->belongsTo(ApiSystem::class);
     }
 
-    public function scopeTradeable(Builder $query)
+    public function scopeEligible(Builder $query)
     {
         $query->where('exchange_symbols.is_active', true)
             ->where('exchange_symbols.is_upsertable', true)
