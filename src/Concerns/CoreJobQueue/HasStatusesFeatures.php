@@ -24,7 +24,7 @@ trait HasStatusesFeatures
             'completed_at' => now(),
         ]);
 
-        if ($this->duration > 5000) {
+        if ($this->duration > 7500) {
             // Send notification due to low performant core job queue processing.
             User::admin()->get()->each(function ($user) {
                 $user->pushover(
