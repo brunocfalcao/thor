@@ -316,15 +316,15 @@ return new class extends Migration
 
             $table->boolean('is_active')
                 ->default(true)
-                ->comment('Global active status exchange symbol. If false, it will not be selected for trades, no matter else');
+                ->comment('Global active status exchange symbol. If false, it will not be selected for trades, neither updated for anything, no matter else');
 
             $table->boolean('is_upsertable')
                 ->default(true)
-                ->comment('If this exchange symbol will be updated (cronjobs, last mark price, etc)');
+                ->comment('If this exchange symbol will be updated (cronjobs, last mark price, etc) but it doesnt mean it will be selected for trading');
 
             $table->boolean('is_tradeable')
-                ->default(false)
-                ->comment('If this exchange symbol will be available for new positions');
+                ->default(true)
+                ->comment('If this exchange symbol will be available for trading');
 
             $table->string('direction')
                 ->nullable()

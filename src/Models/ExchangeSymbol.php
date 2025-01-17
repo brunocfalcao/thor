@@ -5,10 +5,12 @@ namespace Nidavellir\Thor\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Nidavellir\Mjolnir\Concerns\Models\ExchangeSymbol\HasApiFeatures;
+use Nidavellir\Thor\Concerns\ExchangeSymbol\HasStatusesFeatures;
 
 class ExchangeSymbol extends Model
 {
     use HasApiFeatures;
+    use HasStatusesFeatures;
 
     protected $casts = [
         'is_active' => 'boolean',
