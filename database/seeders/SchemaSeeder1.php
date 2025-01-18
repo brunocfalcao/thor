@@ -330,31 +330,6 @@ class SchemaSeeder1 extends Seeder
             'pushover_key' => env('TRADER_PUSHOVER_KEY'),
         ]);
 
-        $karine = User::create([
-            'name' => env('KARINE_NAME'),
-            'email' => env('KARINE_EMAIL'),
-            'password' => env('KARINE_PASSWORD'),
-        ]);
-
-        Account::create([
-            'user_id' => $karine->id,
-            'api_system_id' => $binance->id,
-
-            'is_active' => false,
-
-            'minimum_balance' => 100,
-            'max_concurrent_trades' => 1,
-            'position_size_percentage' => 2,
-            'max_leverage' => 10,
-            'negative_pnl_stop_threshold' => 25,
-
-            'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
-            'max_balance_percentage' => 75,
-            'credentials' => [
-                'api_key' => env('KARINE_BINANCE_API_KEY'),
-                'api_secret' => env('KARINE_BINANCE_API_SECRET')],
-        ]);
-
         Account::create([
             'user_id' => $trader->id,
             'api_system_id' => $binance->id,
