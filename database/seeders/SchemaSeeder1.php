@@ -109,7 +109,7 @@ class SchemaSeeder1 extends Seeder
             'is_default' => true,
             'canonical' => 'standard',
             'description' => 'Default 7.5% laddered',
-            'indicator_timeframes' => ['4h', '6h', '12h', '1d'],
+            'indicator_timeframes' => ['1h', '4h', '6h', '12h', '1d'],
             'order_ratios' => [
                 [-7.5,  16],
                 [-15,  8],
