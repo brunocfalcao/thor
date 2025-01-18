@@ -138,6 +138,10 @@ return new class extends Migration
                 ->nullable()
                 ->comment('The quote currency used to trade, needs to have a portfolio amount');
 
+            $table->decimal('margin_override', 20, 8)
+                ->nullable()
+                ->comment('In case we dont want to calculate a margin, but use this amount (for testing purposes, mostly)');
+
             $table->boolean('is_active')
                 ->default(true)
                 ->comment('Global configuration to allow this account to trade. If the subscription is over, this attribute is false');
