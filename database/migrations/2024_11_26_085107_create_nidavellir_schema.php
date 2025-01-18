@@ -146,6 +146,10 @@ return new class extends Migration
                 ->default(true)
                 ->comment('This is used by the system, to temporarly stop trades on this account. E.g.: If a drop is more than 3.5 percent, other framework conditions, etc');
 
+            $table->boolean('should_try_half_positions_direction')
+                ->default(true)
+                ->comment('Tries to have half of the positions with one direction, and the other half with the opposite direction');
+
             $table->boolean('follow_btc_indicator')
                 ->default(false)
                 ->comment('If true, then it will give priority to select tokens aligned with the BTC indicator result from the exchange symbols');

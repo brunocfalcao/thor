@@ -14,6 +14,7 @@ class Account extends Model
 
     protected $casts = [
         'follow_btc_indicator' => 'boolean',
+        'should_try_half_positions_direction' => 'boolean',
         'is_active' => 'boolean',
         'can_trade' => 'boolean',
         'credentials' => 'array',

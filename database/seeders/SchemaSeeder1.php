@@ -335,7 +335,8 @@ class SchemaSeeder1 extends Seeder
             'api_system_id' => $binance->id,
 
             'minimum_balance' => 500,
-            'max_concurrent_trades' => 1,
+            'max_concurrent_trades' => 12,
+            'margin' => 5,
             'position_size_percentage' => 2,
             'max_leverage' => 20,
             'negative_pnl_stop_threshold' => 15,
@@ -349,16 +350,9 @@ class SchemaSeeder1 extends Seeder
 
         Account::create([
             'user_id' => $admin->id,
+            'can_trade' => false,
             'api_system_id' => $binance->id,
-
-            'minimum_balance' => 500,
-            'max_concurrent_trades' => 0,
-            'position_size_percentage' => 0,
-            'max_leverage' => 20,
-            'negative_pnl_stop_threshold' => 15,
-
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
-            'max_balance_percentage' => 75,
             'credentials' => [
                 'api_key' => env('BINANCE_API_KEY'),
                 'api_secret' => env('BINANCE_API_SECRET')],
@@ -366,6 +360,7 @@ class SchemaSeeder1 extends Seeder
 
         Account::create([
             'user_id' => $admin->id,
+            'can_trade' => false,
             'api_system_id' => $coinmarketcap->id,
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
             'credentials' => [
@@ -375,6 +370,7 @@ class SchemaSeeder1 extends Seeder
 
         Account::create([
             'user_id' => $admin->id,
+            'can_trade' => false,
             'api_system_id' => $taapi->id,
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
             'credentials' => [
@@ -384,6 +380,7 @@ class SchemaSeeder1 extends Seeder
 
         Account::create([
             'user_id' => $admin->id,
+            'can_trade' => false,
             'api_system_id' => $alternativeMe->id,
         ]);
     }
