@@ -4,7 +4,6 @@ namespace Nidavellir\Thor\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 
 class PushoverNotification extends Notification
@@ -67,12 +66,7 @@ class PushoverNotification extends Notification
             throw new \Exception('The notifiable does not have a Pushover user key.');
         }
 
-        // Decrypt the Pushover user key.
-        try {
-            $pushoverUserKey = Crypt::decrypt($notifiable->pushover_key);
-        } catch (\Exception $e) {
-            throw new \Exception('Failed to decrypt the Pushover user key: '.$e->getMessage());
-        }
+        $pushoverUserKey = $notifiable->pushover_key;
 
         // Get the application token from the configuration.
         $token = config("nidavellir.apis.pushover.{$this->applicationKey}");

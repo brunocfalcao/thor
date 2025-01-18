@@ -4,7 +4,6 @@ namespace Nidavellir\Thor\Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Nidavellir\Thor\Models\Account;
 use Nidavellir\Thor\Models\ApiSystem;
@@ -126,7 +125,7 @@ class SchemaSeeder1 extends Seeder
             'email' => env('ADMIN_USER_EMAIL'),
             'is_admin' => true,
             'password' => env('ADMIN_USER_PASSWORD'),
-            'pushover_key' => Crypt::encrypt(env('ADMIN_USER_PUSHOVER_KEY')),
+            'pushover_key' => env('ADMIN_USER_PUSHOVER_KEY'),
             'is_trader' => false,
         ]);
 
@@ -328,7 +327,7 @@ class SchemaSeeder1 extends Seeder
             'name' => env('TRADER_NAME'),
             'email' => env('TRADER_EMAIL'),
             'password' => env('TRADER_PASSWORD'),
-            'pushover_key' => Crypt::encrypt(env('TRADER_PUSHOVER_KEY')),
+            'pushover_key' => env('TRADER_PUSHOVER_KEY'),
         ]);
 
         $karine = User::create([
@@ -352,8 +351,8 @@ class SchemaSeeder1 extends Seeder
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
             'max_balance_percentage' => 75,
             'credentials' => [
-                'api_key' => Crypt::encrypt(env('KARINE_BINANCE_API_KEY')),
-                'api_secret' => Crypt::encrypt(env('KARINE_BINANCE_API_SECRET'))],
+                'api_key' => env('KARINE_BINANCE_API_KEY'),
+                'api_secret' => env('KARINE_BINANCE_API_SECRET')],
         ]);
 
         Account::create([
@@ -369,8 +368,8 @@ class SchemaSeeder1 extends Seeder
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
             'max_balance_percentage' => 75,
             'credentials' => [
-                'api_key' => Crypt::encrypt(env('BINANCE_API_KEY')),
-                'api_secret' => Crypt::encrypt(env('BINANCE_API_SECRET'))],
+                'api_key' => env('BINANCE_API_KEY'),
+                'api_secret' => env('BINANCE_API_SECRET')],
         ]);
 
         Account::create([
@@ -386,8 +385,8 @@ class SchemaSeeder1 extends Seeder
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
             'max_balance_percentage' => 75,
             'credentials' => [
-                'api_key' => Crypt::encrypt(env('BINANCE_API_KEY')),
-                'api_secret' => Crypt::encrypt(env('BINANCE_API_SECRET'))],
+                'api_key' => env('BINANCE_API_KEY'),
+                'api_secret' => env('BINANCE_API_SECRET')],
         ]);
 
         Account::create([
@@ -395,7 +394,7 @@ class SchemaSeeder1 extends Seeder
             'api_system_id' => $coinmarketcap->id,
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
             'credentials' => [
-                'api_key' => Crypt::encrypt(env('COINMARKETCAP_API_KEY')),
+                'api_key' => env('COINMARKETCAP_API_KEY'),
             ],
         ]);
 
@@ -404,7 +403,7 @@ class SchemaSeeder1 extends Seeder
             'api_system_id' => $taapi->id,
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
             'credentials' => [
-                'secret' => Crypt::encrypt(env('TAAPI_SECRET')),
+                'secret' => env('TAAPI_SECRET'),
             ],
         ]);
 
