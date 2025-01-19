@@ -79,16 +79,22 @@ trait HasStatusesFeatures
         ]);
     }
 
-    public function updateToFailed(\Throwable $e)
+    public function updateToFailed(string|\Throwable $e)
     {
-        $errorMessage = $this->class.' - '.$e->getMessage().' (line '.$e->getLine().')';
+        if (is_string($e)) {
+            $errorMessage = $e;
+            $traceMessage = null;
+        } else {
+            $errorMessage = $this->class.' - '.$e->getMessage().' (line '.$e->getLine().')';
+            $traceMessage = $e->getTraceAsString();
+        }
 
         // Update the current job to 'failed'.
         $this->update([
             'status' => 'failed',
             'hostname' => gethostname(),
             'error_message' => $errorMessage,
-            'error_stack_trace' => $e->getTraceAsString(),
+            'error_stack_trace' => $traceMessage,
             'completed_at' => now(),
         ]);
 
