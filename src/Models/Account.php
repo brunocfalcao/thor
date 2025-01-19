@@ -13,8 +13,8 @@ class Account extends Model
     use HasApiFeatures, HasDrawDownFeatures, SoftDeletes;
 
     protected $casts = [
-        'follow_btc_indicator' => 'boolean',
-        'should_try_half_positions_direction' => 'boolean',
+        'follow_btc_direction' => 'boolean',
+        'with_half_positions_direction' => 'boolean',
         'is_active' => 'boolean',
         'can_trade' => 'boolean',
         'credentials' => 'array',

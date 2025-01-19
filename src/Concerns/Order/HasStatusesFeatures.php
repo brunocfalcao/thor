@@ -4,7 +4,7 @@ namespace Nidavellir\Thor\Concerns\Order;
 
 trait HasStatusesFeatures
 {
-    public function changeToFailed(\Throwable $e)
+    public function updateToFailed(\Throwable $e)
     {
         $this->update([
             'status' => 'FAILED',

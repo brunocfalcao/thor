@@ -4,12 +4,12 @@ namespace Nidavellir\Thor\Concerns\Position;
 
 trait HasStatusesFeatures
 {
-    public function changeToActive()
+    public function updateToActive()
     {
         $this->update(['status' => 'active']);
     }
 
-    public function changeToClosed()
+    public function updateToClosed()
     {
         $this->update([
             'closed_at' => now(),

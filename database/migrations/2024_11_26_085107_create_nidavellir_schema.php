@@ -74,10 +74,6 @@ return new class extends Migration
 
             $table->boolean('is_default')->default(1);
 
-            $table->string('direction_priority')
-                ->nullable()
-                ->comment('This direction will be the priority to select the next tokens, in case they exist. This will allow the bot to select the wrong direction even if the conclusion is the good one');
-
             $table->string('canonical')->unique();
             $table->text('order_ratios');
             $table->decimal('profit_percentage', 5, 3);
@@ -150,11 +146,15 @@ return new class extends Migration
                 ->default(true)
                 ->comment('This is used by the system, to temporarly stop trades on this account. E.g.: If a drop is more than 3.5 percent, other framework conditions, etc');
 
-            $table->boolean('should_try_half_positions_direction')
+            $table->boolean('with_half_positions_direction')
                 ->default(true)
                 ->comment('Tries to have half of the positions with one direction, and the other half with the opposite direction');
 
-            $table->boolean('follow_btc_indicator')
+            $table->string('direction_priority')
+                ->nullable()
+                ->comment('This direction will be the priority to select the next tokens, in case they exist. This will allow the bot to select the wrong direction even if the conclusion is the good one');
+
+            $table->boolean('follow_btc_direction')
                 ->default(false)
                 ->comment('If true, then it will give priority to select tokens aligned with the BTC indicator result from the exchange symbols');
 
@@ -165,31 +165,19 @@ return new class extends Migration
             $table->decimal('position_size_percentage', 5, 2)->nullable()
                 ->comment('The margin percentage that will be used on each position, without leverage');
 
+            $table->unsignedInteger('max_balance_percentage')
+                ->nullable()
+                ->comment('This is the maximum allowed portfolio percentage for the account');
+
             $table->unsignedInteger('max_leverage')->nullable()
                 ->comment('The max leverage that the position can use, inside the leverage bracket amount');
 
             $table->decimal('negative_pnl_stop_threshold', 5, 2)->nullable()
                 ->comment('How much percentage the account can have a negative PnL, before the system stops opening new positions');
 
-            $table->decimal('total_wallet_balance', 20, 5)
-                ->nullable();
-
-            $table->decimal('total_unrealized_profit', 20, 5)
-                ->nullable();
-
-            $table->decimal('total_maintenance_margin', 20, 5)
-                ->nullable();
-
-            $table->decimal('total_margin_balance', 20, 5)
-                ->nullable();
-
             $table->decimal('monthly_profit_objective', 8, 2)
                 ->nullable()
                 ->comment('The system will try to match this profit objective, and in case it is exceed it drops the trade percentage proportionally. If it doesnt achieve, it keeps the active trading configuration. Each week this can be adjusted by the system');
-
-            $table->unsignedInteger('max_balance_percentage')
-                ->nullable()
-                ->comment('This is the maximum allowed portfolio percentage for the account');
 
             $table->json('credentials')
                 ->nullable();

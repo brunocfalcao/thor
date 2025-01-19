@@ -41,6 +41,11 @@ class ExchangeSymbol extends Model
         return $this->belongsTo(ApiSystem::class);
     }
 
+    public function scopeFromQuote(Builder $query, Quote $quote)
+    {
+        $query->where('exchange_symbols.quote_id', $quote->id);
+    }
+
     public function scopeEligible(Builder $query)
     {
         $query->where('exchange_symbols.is_active', true)
