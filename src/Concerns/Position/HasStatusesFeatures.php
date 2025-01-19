@@ -9,6 +9,13 @@ trait HasStatusesFeatures
         $this->update(['status' => 'active']);
     }
 
+    public function updateToClosing()
+    {
+        $this->update([
+            'status' => 'closing',
+        ]);
+    }
+
     public function updateToClosed()
     {
         $this->update([
