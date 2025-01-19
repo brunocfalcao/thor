@@ -7,7 +7,7 @@ trait HasStatusesFeatures
     public function changeToFailed(\Throwable $e)
     {
         $this->update([
-            'status' => 'failed',
+            'status' => 'FAILED',
             'error_message' => $e->getMessage(),
         ]);
     }
