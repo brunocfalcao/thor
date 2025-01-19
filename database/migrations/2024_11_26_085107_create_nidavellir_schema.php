@@ -331,7 +331,7 @@ return new class extends Migration
                 ->comment('If this exchange symbol will be updated (cronjobs, last mark price, etc) but it doesnt mean it will be selected for trading');
 
             $table->boolean('is_tradeable')
-                ->default(true)
+                ->default(false)
                 ->comment('If this exchange symbol will be available for trading');
 
             $table->string('direction')

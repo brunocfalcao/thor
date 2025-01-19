@@ -45,6 +45,7 @@ class ExchangeSymbol extends Model
     {
         $query->where('exchange_symbols.is_active', true)
             ->where('exchange_symbols.is_upsertable', true)
-            ->where('exchange_symbols.is_tradeable', true);
+            ->where('exchange_symbols.is_tradeable', true)
+            ->whereNotNull('direction');
     }
 }

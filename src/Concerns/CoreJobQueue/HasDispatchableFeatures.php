@@ -25,7 +25,13 @@ trait HasDispatchableFeatures
             $job->updateToDispatched();
 
             // Instantiate the job with properly resolved arguments
-            $jobInstance = self::instantiateJobWithArguments($job->class, $job->arguments);
+            try {
+                $jobInstance = self::instantiateJobWithArguments($job->class, $job->arguments);
+            } catch (\Throwable $e) {
+                $job->updateToFailed($e);
+
+                return;
+            }
 
             // Attach the job instance to the coreJobQueue
             $jobInstance->coreJobQueue = $job;
@@ -80,7 +86,13 @@ trait HasDispatchableFeatures
                     $job->updateToDispatched();
 
                     // Instantiate the job with properly resolved arguments
-                    $jobInstance = self::instantiateJobWithArguments($job->class, $job->arguments);
+                    try {
+                        $jobInstance = self::instantiateJobWithArguments($job->class, $job->arguments);
+                    } catch (\Throwable $e) {
+                        $job->updateToFailed($e);
+
+                        return;
+                    }
 
                     // Attach the job instance to the coreJobQueue
                     $jobInstance->coreJobQueue = $job;

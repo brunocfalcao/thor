@@ -86,6 +86,7 @@ trait HasStatusesFeatures
         // Update the current job to 'failed'.
         $this->update([
             'status' => 'failed',
+            'hostname' => gethostname(),
             'error_message' => $errorMessage,
             'error_stack_trace' => $e->getTraceAsString(),
             'completed_at' => now(),
