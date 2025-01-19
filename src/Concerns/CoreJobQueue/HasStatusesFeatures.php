@@ -79,7 +79,7 @@ trait HasStatusesFeatures
         ]);
     }
 
-    public function updateToFailed(string|\Throwable $e)
+    public function updateToFailed(string|\Throwable $e, $silently = false)
     {
         if (is_string($e)) {
             $errorMessage = $e;
@@ -110,11 +110,13 @@ trait HasStatusesFeatures
                 ]);
         }
 
-        // Notify failure via pushover.
-        User::where('is_admin', true)
-            ->get()
-            ->each(function ($user) use ($errorMessage) {
-                $user->pushover($errorMessage, 'Core Job Queue Error', 'nidavellir_errors', ['priority' => 1, 'sound' => 'siren']);
-            });
+        if (! $silently) {
+            // Notify failure via pushover.
+            User::where('is_admin', true)
+                ->get()
+                ->each(function ($user) use ($errorMessage) {
+                    $user->pushover($errorMessage, 'Core Job Queue Error', 'nidavellir_errors', ['priority' => 1, 'sound' => 'siren']);
+                });
+        }
     }
 }
