@@ -4,10 +4,12 @@ namespace Nidavellir\Thor\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Nidavellir\Mjolnir\Concerns\Models\Order\HasApiFeatures;
+use Nidavellir\Thor\Concerns\Order\HasStatusesFeatures;
 
 class Order extends Model
 {
     use HasApiFeatures;
+    use HasStatusesFeatures;
 
     protected $casts = [
         'api_result' => 'array',
