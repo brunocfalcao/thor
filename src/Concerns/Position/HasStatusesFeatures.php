@@ -4,6 +4,11 @@ namespace Nidavellir\Thor\Concerns\Position;
 
 trait HasStatusesFeatures
 {
+    public function isOpened()
+    {
+        return $this->status == 'active' || $this->status == 'new';
+    }
+
     public function updateToActive()
     {
         $this->update(['status' => 'active']);
