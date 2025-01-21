@@ -14,6 +14,21 @@ trait HasStatusesFeatures
         $this->update(['status' => 'active']);
     }
 
+    public function updateToRollbacking()
+    {
+        $this->update([
+            'status' => 'rollbacking',
+        ]);
+    }
+
+    public function updateToRollbacked()
+    {
+        $this->update([
+            'closed_at' => now(),
+            'status' => 'rollbacked',
+        ]);
+    }
+
     public function updateToClosing()
     {
         $this->update([
