@@ -14,6 +14,11 @@ trait HasStatusesFeatures
         return $this->status == 'rollbacking';
     }
 
+    public function isClosing()
+    {
+        return $this->status == 'closing';
+    }
+
     public function isRollbacked()
     {
         return $this->status == 'rollbacked';
