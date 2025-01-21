@@ -9,23 +9,35 @@ trait HasStatusesFeatures
         return $this->status == 'active' || $this->status == 'new';
     }
 
+    public function isRollbacking()
+    {
+        return $this->status == 'rollbacking';
+    }
+
+    public function isRollbacked()
+    {
+        return $this->status == 'rollbacked';
+    }
+
     public function updateToActive()
     {
         $this->update(['status' => 'active']);
     }
 
-    public function updateToRollbacking()
+    public function updateToRollbacking(?string $message = null)
     {
         $this->update([
             'status' => 'rollbacking',
+            'error_message' => $message,
         ]);
     }
 
-    public function updateToRollbacked()
+    public function updateToRollbacked(?string $message = null)
     {
         $this->update([
             'closed_at' => now(),
             'status' => 'rollbacked',
+            'error_message' => $message,
         ]);
     }
 
