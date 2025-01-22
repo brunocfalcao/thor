@@ -18,7 +18,6 @@ class Position extends Model
 
     protected $casts = [
         'wap_triggered' => 'boolean',
-        'order_ratios' => 'array',
         'started_at' => 'datetime',
         'closed_at' => 'datetime',
         'indicators' => 'array',

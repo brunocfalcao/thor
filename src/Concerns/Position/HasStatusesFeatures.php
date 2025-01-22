@@ -67,7 +67,7 @@ trait HasStatusesFeatures
             $errorMessage = $e;
             $traceMessage = null;
         } else {
-            $errorMessage = $this->class.' - '.$e->getMessage().' (line '.$e->getLine().')';
+            $errorMessage = $e->getMessage().' (line '.$e->getLine().')';
             $traceMessage = $e->getTraceAsString();
         }
 
