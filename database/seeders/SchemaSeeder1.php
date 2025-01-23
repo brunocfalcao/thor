@@ -335,7 +335,7 @@ class SchemaSeeder1 extends Seeder
             'api_system_id' => $binance->id,
 
             'minimum_balance' => 500,
-            'max_concurrent_trades' => 1,
+            'max_concurrent_trades' => 12,
             'margin_override' => 100,
             'position_size_percentage' => 2,
             'max_leverage' => 20,
