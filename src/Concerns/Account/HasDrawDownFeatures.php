@@ -17,7 +17,7 @@ trait HasDrawDownFeatures
     public function calculateMaxDrawdownForRange(Carbon $startDate, Carbon $endDate, $column = 'total_wallet_balance')
     {
         // Log the provided date range
-        info("Starting drawdown calculation for range: {$startDate->toDateTimeString()} to {$endDate->toDateTimeString()}");
+        //info("Starting drawdown calculation for range: {$startDate->toDateTimeString()} to {$endDate->toDateTimeString()}");
 
         // Fetch data for the specified date range
         $data = $this->balanceHistory()
