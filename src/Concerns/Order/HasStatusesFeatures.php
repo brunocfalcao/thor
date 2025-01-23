@@ -4,6 +4,16 @@ namespace Nidavellir\Thor\Concerns\Order;
 
 trait HasStatusesFeatures
 {
+    public function updateToCancelled(?string $message = null)
+    {
+        $this->update(['status' => 'CANCELLED', 'error_message' => $message]);
+    }
+
+    public function updateToInvalid(?string $message = null)
+    {
+        $this->update(['status' => 'INVALID', 'error_message' => $message]);
+    }
+
     public function updateToFailed(string|\Throwable $e)
     {
         if (is_string($e)) {
