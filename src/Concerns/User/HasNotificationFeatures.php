@@ -29,7 +29,7 @@ trait HasNotificationFeatures
 
             return true;
         } catch (\Exception $e) {
-            return 'Failed to send notification: '.$e->getMessage();
+            \Log::emergency('Failed to send notification: '.$e->getMessage());
         }
     }
 }
