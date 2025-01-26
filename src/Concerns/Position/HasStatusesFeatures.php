@@ -6,7 +6,10 @@ trait HasStatusesFeatures
 {
     public function isOpened()
     {
-        return $this->status == 'active' || $this->status == 'new';
+        return $this->status == 'active' ||
+               $this->status == 'new' ||
+               $this->status == 'rollbacking' ||
+               $this->status == 'closing';
     }
 
     public function isRollbacking()
