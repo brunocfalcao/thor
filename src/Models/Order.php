@@ -12,6 +12,7 @@ class Order extends Model
     use HasStatusesFeatures;
 
     protected $casts = [
+        'skip_observer' => 'boolean',
         'api_result' => 'array',
         'started_at' => 'datetime',
         'closed_at' => 'datetime',

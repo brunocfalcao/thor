@@ -22,14 +22,10 @@ trait HasNotificationFeatures
             return 'User does not have a Pushover key.';
         }
 
-        try {
-            // Create and send the notification
-            $notification = new PushoverNotification($message, $applicationKey, $title, $additionalParameters);
-            $notification->send($this);
+        // Create and send the notification
+        $notification = new PushoverNotification($message, $applicationKey, $title, $additionalParameters);
+        $notification->send($this);
 
-            return true;
-        } catch (\Exception $e) {
-            \Log::emergency('Failed to send notification: '.$e->getMessage());
-        }
+        return true;
     }
 }
