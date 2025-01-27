@@ -3,8 +3,9 @@
 namespace Nidavellir\Thor\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Nidavellir\Mjolnir\Concerns\Models\Order\HasApiFeatures;
+use Illuminate\Database\Eloquent\Builder;
 use Nidavellir\Thor\Concerns\Order\HasStatusesFeatures;
+use Nidavellir\Mjolnir\Concerns\Models\Order\HasApiFeatures;
 
 class Order extends Model
 {
@@ -21,6 +22,11 @@ class Order extends Model
     public function position()
     {
         return $this->belongsTo(Position::class);
+    }
+
+    public function scopeActive(Builder $query)
+    {
+        $query->whereIn('orders.status', ['NEW', 'PARTIALLY_FILLED']);
     }
 
     /**
