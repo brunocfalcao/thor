@@ -43,10 +43,12 @@ class Position extends Model
         return $this->belongsTo(TradeConfiguration::class);
     }
 
-    /**
-     * Returns positions that are "in opening" status, meaning new ones
-     * (not yet synced) or in 'active' (meaning fully synced).
-     */
+    // Returns positions that are "in active" statuses, like not closed neither failed.
+    public function scopeActive(Builder $query)
+    {
+        $query->whereNotIn('positions.status', ['closed', 'failed']);
+    }
+
     public function scopeOpened(Builder $query)
     {
         $query->whereIn('positions.status', ['new', 'active']);

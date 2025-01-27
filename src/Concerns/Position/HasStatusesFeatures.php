@@ -4,12 +4,9 @@ namespace Nidavellir\Thor\Concerns\Position;
 
 trait HasStatusesFeatures
 {
-    public function isOpened()
+    public function isActive()
     {
-        return $this->status == 'active' ||
-               $this->status == 'new' ||
-               $this->status == 'rollbacking' ||
-               $this->status == 'closing';
+        return ! in_array($this->status, ['closed', 'failed']);
     }
 
     public function isRollbacking()
