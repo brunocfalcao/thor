@@ -2,10 +2,10 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Nidavellir\Thor\Concerns\Order\HasStatusesFeatures;
+use Illuminate\Database\Eloquent\Model;
 use Nidavellir\Mjolnir\Concerns\Models\Order\HasApiFeatures;
+use Nidavellir\Thor\Concerns\Order\HasStatusesFeatures;
 
 class Order extends Model
 {
