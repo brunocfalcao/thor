@@ -49,6 +49,7 @@ class Position extends Model
         $query->whereNotIn('positions.status', ['closed', 'failed']);
     }
 
+    // Returns positions that are only in active statuses: new (being created) or active (synced).
     public function scopeOpened(Builder $query)
     {
         $query->whereIn('positions.status', ['new', 'active']);
