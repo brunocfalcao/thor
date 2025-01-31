@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Nidavellir\Mjolnir\Concerns\Models\Account\HasApiFeatures;
+use Nidavellir\Thor\Concerns\Account\HasActionFeatures;
 use Nidavellir\Thor\Concerns\Account\HasDrawDownFeatures;
 
 class Account extends Model
 {
-    use HasApiFeatures, HasDrawDownFeatures, SoftDeletes;
+    use HasActionFeatures, HasApiFeatures, HasDrawDownFeatures, SoftDeletes;
 
     protected $casts = [
         'follow_btc_direction' => 'boolean',
