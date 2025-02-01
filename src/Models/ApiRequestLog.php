@@ -14,6 +14,8 @@ class ApiRequestLog extends Model
         'http_headers_sent' => 'array',
         'response' => 'array',
         'http_headers_returned' => 'array',
+        'started_at' => 'datetime',
+        'closed_at' => 'datetime',
     ];
 
     public function loggable()
