@@ -12,16 +12,16 @@ return new class extends Migration
         Schema::table('api_requests_log', function (Blueprint $table) {
 
             $table->unsignedInteger('duration')
-                  ->nullable()
-                  ->after('debug_data');
+                ->nullable()
+                ->after('debug_data');
 
             $table->timestamp('started_at')
-                  ->nullable()
-                  ->after('hostname');
+                ->nullable()
+                ->after('hostname');
 
             $table->timestamp('completed_at')
-                  ->nullable()
-                  ->after('started_at');
+                ->nullable()
+                ->after('started_at');
         });
     }
 };
