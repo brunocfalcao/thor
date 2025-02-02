@@ -2,12 +2,11 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Nidavellir\Thor\Models\Symbol;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Nidavellir\Thor\Concerns\ExchangeSymbol\HasStatusesFeatures;
+use Illuminate\Database\Eloquent\Model;
 use Nidavellir\Mjolnir\Concerns\Models\ExchangeSymbol\HasApiFeatures;
 use Nidavellir\Mjolnir\Concerns\Models\ExchangeSymbol\HasTokenParsingFeatures;
+use Nidavellir\Thor\Concerns\ExchangeSymbol\HasStatusesFeatures;
 
 class ExchangeSymbol extends Model
 {
