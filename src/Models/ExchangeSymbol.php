@@ -2,11 +2,12 @@
 
 namespace Nidavellir\Thor\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use Nidavellir\Thor\Models\Symbol;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Nidavellir\Thor\Concerns\ExchangeSymbol\HasStatusesFeatures;
 use Nidavellir\Mjolnir\Concerns\Models\ExchangeSymbol\HasApiFeatures;
 use Nidavellir\Mjolnir\Concerns\Models\ExchangeSymbol\HasTokenParsingFeatures;
-use Nidavellir\Thor\Concerns\ExchangeSymbol\HasStatusesFeatures;
 
 class ExchangeSymbol extends Model
 {
@@ -50,9 +51,13 @@ class ExchangeSymbol extends Model
 
     public function scopeEligible(Builder $query)
     {
+        // Never make BTC eligible to be selected as an exchange symbol for trading.
+        $btcSymbolId = Symbol::query()->firstWhere('token', 'BTC')?->id;
+
         $query->where('exchange_symbols.is_active', true)
             ->where('exchange_symbols.is_upsertable', true)
             ->where('exchange_symbols.is_tradeable', true)
+            ->where('exchange_symbols.symbol_id', '<>', $btcSymbolId)
             ->whereNotNull('direction');
     }
 }
