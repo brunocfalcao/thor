@@ -14,8 +14,6 @@ class TradeConfiguration extends Model
 
     protected $casts = [
         'is_default' => 'boolean',
-        'order_ratios' => 'array',
-        'indicators' => 'array',
         'indicator_timeframes' => 'array',
     ];
 
