@@ -58,6 +58,6 @@ class Account extends Model
 
     public function scopeCanTrade(Builder $query)
     {
-        $query->where('accounts.can_trade', true);
+        $query->active()->where('accounts.can_trade', true);
     }
 }
