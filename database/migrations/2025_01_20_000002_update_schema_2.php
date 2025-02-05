@@ -13,13 +13,8 @@ return new class extends Migration
         Schema::table('positions', function (Blueprint $table) {
             $table->dropColumn('order_ratios');
 
-            $table->decimal('percentage_gap', 5, 2)
-                ->after('closed_at')
-                ->default(7.15)
-                ->comment('The percentage gap used to determine the spacing between limit orders in the martingale logic');
-
             $table->unsignedInteger('total_limit_orders')
-                ->after('percentage_gap')
+                ->after('closed_at')
                 ->default(4)
                 ->comment('Total limit orders, for the martingale calculation');
         });
@@ -33,10 +28,15 @@ return new class extends Migration
                 ->default(4)
                 ->comment('Total limit orders, for the martingale calculation');
 
-            $table->decimal('percentage_gap', 5, 2)
+            $table->decimal('percentage_gap_long', 5, 2)
                 ->after('total_limit_orders')
                 ->default(7.5)
-                ->comment('The percentage gap used to determine the spacing between limit orders in the martingale logic');
+                ->comment('Order limit laddered percentage gaps used when the position is a LONG');
+
+            $table->decimal('percentage_gap_short', 5, 2)
+                ->after('total_limit_orders')
+                ->default(8.5)
+                ->comment('Order limit laddered percentage gaps used when the position is a SHORT');
         });
 
         Schema::create('system', function (Blueprint $table) {
