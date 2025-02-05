@@ -172,7 +172,7 @@ return new class extends Migration
             $table->unsignedInteger('max_leverage')->nullable()
                 ->comment('The max leverage that the position can use, inside the leverage bracket amount');
 
-            $table->decimal('negative_pnl_stop_threshold', 5, 2)->nullable()
+            $table->decimal('negative_pnl_stop_threshold_percentage', 5, 2)->nullable()
                 ->comment('How much percentage the account can have a negative PnL, before the system stops opening new positions');
 
             $table->decimal('monthly_profit_objective', 8, 2)
@@ -466,10 +466,6 @@ return new class extends Migration
 
         Artisan::call('db:seed', [
             '--class' => Nidavellir\Thor\Database\Seeders\SchemaSeeder1::class,
-        ]);
-
-        Artisan::call('db:seed', [
-            '--class' => Nidavellir\Thor\Database\Seeders\TestingSeeder::class,
         ]);
     }
 };

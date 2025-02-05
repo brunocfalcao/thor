@@ -3,19 +3,12 @@
 namespace Nidavellir\Thor\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Nidavellir\Thor\Models\TradingPair;
+use Nidavellir\Thor\Models\TradeConfiguration;
 
 class SchemaSeeder3 extends Seeder
 {
     public function run(): void
     {
-        /**
-         * Add a new token: JTO
-         */
-        TradingPair::create([
-            'cmc_id' => 28541,
-            'token' => 'JTO',
-            'category_canonical' => 'defi',
-        ]);
+        TradeConfiguration::query()->default()->first()->update(['total_limit_orders' => 5]);
     }
 }

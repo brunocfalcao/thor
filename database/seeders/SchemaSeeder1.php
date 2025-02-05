@@ -58,18 +58,6 @@ class SchemaSeeder1 extends Seeder
             ],
         ]);
 
-        /*
-        Indicator::create([
-            'canonical' => 'rsi',
-            'class' => "Nidavellir\Mjolnir\Indicators\RSIIndicator",
-            'parameters' => [
-                'backtrack' => 1,
-                'results' => 2,
-                'period' => '14',
-            ],
-        ]);
-        */
-
         // Add a new indicator EMAsConvergence.
         Indicator::create([
             'canonical' => 'emas-convergence',
@@ -79,29 +67,32 @@ class SchemaSeeder1 extends Seeder
         ]);
 
         Indicator::create([
+            'canonical' => 'ema-40',
+            'class' => "Nidavellir\Mjolnir\Indicators\EMAIndicator",
+            'parameters' => [
+                'backtrack' => 1,
+                'results' => 2,
+                'period' => '40',
+            ],
+        ]);
+
+        Indicator::create([
             'canonical' => 'ema-80',
             'class' => "Nidavellir\Mjolnir\Indicators\EMAIndicator",
             'parameters' => [
+                'backtrack' => 1,
                 'results' => 2,
                 'period' => '80',
             ],
         ]);
 
         Indicator::create([
-            'canonical' => 'ema-160',
+            'canonical' => 'ema-120',
             'class' => "Nidavellir\Mjolnir\Indicators\EMAIndicator",
             'parameters' => [
+                'backtrack' => 1,
                 'results' => 2,
-                'period' => '160',
-            ],
-        ]);
-
-        Indicator::create([
-            'canonical' => 'ema-240',
-            'class' => "Nidavellir\Mjolnir\Indicators\EMAIndicator",
-            'parameters' => [
-                'results' => 2,
-                'period' => '240',
+                'period' => '120',
             ],
         ]);
 
@@ -158,25 +149,25 @@ class SchemaSeeder1 extends Seeder
             TradingPair::create($data);
         }
 
-        // Meme coins.
+        // Pioneer coins.
         $tradingPairs = [
-            ['DOGE', '74'],
-            ['SHIB', '5994', '1000SHIB'],
-            ['PEPE', '24478', '1000PEPE'],
-            ['BONK', '23095', '1000BONK'],
-            ['WIF', '28752'],
-            ['FLOKI', '10804', '1000FLOKI'],
-            ['BRETT', '29743'],
-            ['MOG', '27659', '1000000MOG'],
-            ['PNUT', '33788'],
-            ['POPCAT', '28782'],
+            ['APT', '21794'],
+            ['ARB', '11841'],
+            ['ENA', '30171'],
+            ['ENS', '13855'],
+            ['JTO', '28541'],
+            ['JUP', '29210'],
+            ['SUI', '20947'],
+            ['TAO', '22974'],
+            ['TIA', '22861'],
+            ['WLD', '13502'],
         ];
 
         foreach ($tradingPairs as $pair) {
             $data = [
                 'token' => $pair[0],
                 'cmc_id' => $pair[1],
-                'category_canonical' => 'meme',
+                'category_canonical' => 'pioneer',
             ];
 
             if (array_key_exists(2, $pair)) {
@@ -186,109 +177,53 @@ class SchemaSeeder1 extends Seeder
             TradingPair::create($data);
         }
 
-        // Defi coins.
+        // Regular coins.
         $tradingPairs = [
+            ['ALGO', '4030'],
+            ['DOT', '6636'],
+            ['FET', '3773'],
+            ['INJ', '7226'],
+            ['POL', '28321'],
+            ['QNT', '3155'],
+            ['SAND', '6210'],
+            ['STX', '4847'],
+            ['TRX', '1958'],
+            ['VET', '3077'],
+            ['XLM', '512'],
+        ];
+
+        foreach ($tradingPairs as $pair) {
+            $data = [
+                'token' => $pair[0],
+                'cmc_id' => $pair[1],
+                'category_canonical' => 'regular',
+            ];
+
+            if (array_key_exists(2, $pair)) {
+                $data['exchange_canonicals'] = ['binance' => $pair[2]];
+            }
+
+            TradingPair::create($data);
+        }
+
+        // Stable coins.
+        $tradingPairs = [
+            ['AAVE', '7278'],
+            ['ADA', '2010'],
+            ['ATOM', '3794'],
             ['AVAX', '5805'],
             ['LINK', '1975'],
-            ['UNI', '7083'],
-            ['AAVE', '7278'],
-            ['ENA', '30171'],
-            ['MKR', '1518'],
-            ['STX', '4847'],
-            ['INJ', '7226'],
-            ['GRT', '6719'],
-            ['RUNE', '4157'],
-        ];
-
-        foreach ($tradingPairs as $pair) {
-            $data = [
-                'token' => $pair[0],
-                'cmc_id' => $pair[1],
-                'category_canonical' => 'defi',
-            ];
-
-            if (array_key_exists(2, $pair)) {
-                $data['exchange_canonicals'] = ['binance' => $pair[2]];
-            }
-
-            TradingPair::create($data);
-        }
-
-        // AI coins.
-        $tradingPairs = [
-            ['NEAR', '6535'],
-            ['ICP', '8916'],
-            ['VIRTUAL', '29420'],
-            ['RENDER', '5690'],
-            ['TAO', '22974'],
-            ['FET', '3773'],
-            ['FIL', '2280'],
-            ['THETA', '2416'],
-            ['GRASS', '32956'],
-            ['TURBO', '24911'],
-        ];
-
-        foreach ($tradingPairs as $pair) {
-            $data = [
-                'token' => $pair[0],
-                'cmc_id' => $pair[1],
-                'category_canonical' => 'ai',
-            ];
-
-            if (array_key_exists(2, $pair)) {
-                $data['exchange_canonicals'] = ['binance' => $pair[2]];
-            }
-
-            TradingPair::create($data);
-        }
-
-        // Gaming coins.
-        $tradingPairs = [
-            ['IMX', '10603'],
-            ['GALA', '7080'],
-            ['SAND', '6210'],
-            ['EGLD', '6892'],
-            ['MANA', '1966'],
-            ['AXS', '6783'],
-            ['APE', '18876'],
-            ['SUPER', '8290'],
-            ['NOT', '28850'],
-            ['RON', '14101'],
-        ];
-
-        foreach ($tradingPairs as $pair) {
-            $data = [
-                'token' => $pair[0],
-                'cmc_id' => $pair[1],
-                'category_canonical' => 'gaming',
-            ];
-
-            if (array_key_exists(2, $pair)) {
-                $data['exchange_canonicals'] = ['binance' => $pair[2]];
-            }
-
-            TradingPair::create($data);
-        }
-
-        // Top 20 coins.
-        $tradingPairs = [
-            ['XRP', '52'],
             ['SOL', '5426'],
-            ['BNB', '1839'],
-            ['ADA', '2010'],
-            ['TON', '11419'],
-            ['SUI', '20947'],
-            ['DOT', '6636'],
-            ['HBAR', '4642'],
-            ['XLM', '512'],
-            ['LTC', '2'],
+            ['XMR', '328'],
+            ['XRP', '52'],
+            ['XTZ', '2011'],
         ];
 
         foreach ($tradingPairs as $pair) {
             $data = [
                 'token' => $pair[0],
                 'cmc_id' => $pair[1],
-                'category_canonical' => 'top20',
+                'category_canonical' => 'stable',
             ];
 
             if (array_key_exists(2, $pair)) {
@@ -339,7 +274,7 @@ class SchemaSeeder1 extends Seeder
             'margin_override' => 100,
             'position_size_percentage' => 2,
             'max_leverage' => 20,
-            'negative_pnl_stop_threshold' => 15,
+            'negative_pnl_stop_threshold_percentage' => 25,
 
             'quote_id' => Quote::firstWhere('canonical', 'USDT')->id,
             'max_balance_percentage' => 75,

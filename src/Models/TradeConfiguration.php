@@ -15,6 +15,7 @@ class TradeConfiguration extends Model
     protected $casts = [
         'is_default' => 'boolean',
         'indicator_timeframes' => 'array',
+        'order_ratios' => 'array',
     ];
 
     public function exchangeSymbols()
