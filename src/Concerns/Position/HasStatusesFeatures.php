@@ -6,7 +6,7 @@ trait HasStatusesFeatures
 {
     public function isActive()
     {
-        return ! in_array($this->status, ['closed', 'failed']);
+        return ! in_array($this->status, ['closed', 'failed', 'cancelled']);
     }
 
     public function isRollbacking()
@@ -17,6 +17,11 @@ trait HasStatusesFeatures
     public function isClosing()
     {
         return $this->status == 'closing';
+    }
+
+    public function isCancelled()
+    {
+        return $this->status == 'cancelled';
     }
 
     public function isRollbacked()
@@ -74,6 +79,23 @@ trait HasStatusesFeatures
         $this->update([
             'closed_at' => now(),
             'status' => 'failed',
+            'error_message' => $errorMessage,
+        ]);
+    }
+
+    public function updateToCancelled(string|\Throwable $e)
+    {
+        if (is_string($e)) {
+            $errorMessage = $e;
+            $traceMessage = null;
+        } else {
+            $errorMessage = $e->getMessage().' (line '.$e->getLine().')';
+            $traceMessage = $e->getTraceAsString();
+        }
+
+        $this->update([
+            'closed_at' => now(),
+            'status' => 'cancelled',
             'error_message' => $errorMessage,
         ]);
     }
