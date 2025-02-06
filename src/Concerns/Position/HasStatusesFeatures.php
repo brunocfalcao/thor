@@ -6,7 +6,7 @@ trait HasStatusesFeatures
 {
     public function isActive()
     {
-        return ! in_array($this->status, ['closed', 'failed', 'cancelled']);
+        return ! in_array($this->status, ['closed', 'failed', 'cancelled', 'rollbacked']);
     }
 
     public function isRollbacking()
