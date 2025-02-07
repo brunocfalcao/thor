@@ -25,6 +25,11 @@ class Position extends Model
         'indicators' => 'array',
     ];
 
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
+
     public function exchangeSymbol()
     {
         return $this->belongsTo(ExchangeSymbol::class);

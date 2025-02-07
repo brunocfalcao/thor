@@ -30,4 +30,9 @@ class ApiSystem extends Model
     {
         return $this->hasManyThrough(Position::class, Account::class);
     }
+
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
 }

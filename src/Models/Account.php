@@ -31,6 +31,11 @@ class Account extends Model
         return $this->belongsTo(ApiSystem::class);
     }
 
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
+
     public function quote()
     {
         return $this->belongsTo(Quote::class);

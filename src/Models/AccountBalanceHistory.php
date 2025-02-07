@@ -12,4 +12,9 @@ class AccountBalanceHistory extends Model
     {
         return $this->belongsTo(Account::class);
     }
+
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
 }

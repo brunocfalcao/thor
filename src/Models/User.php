@@ -43,6 +43,11 @@ class User extends Authenticatable
         return $this->hasManyThrough(Position::class, Account::class);
     }
 
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
+
     public function rateLimits()
     {
         return $this->hasManyThrough(RateLimit::class, Account::class);

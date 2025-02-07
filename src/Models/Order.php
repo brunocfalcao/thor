@@ -19,6 +19,11 @@ class Order extends Model
         'closed_at' => 'datetime',
     ];
 
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
+
     public function position()
     {
         return $this->belongsTo(Position::class);

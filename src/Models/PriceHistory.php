@@ -12,4 +12,9 @@ class PriceHistory extends Model
     {
         return $this->belongsTo(ExchangeSymbol::class);
     }
+
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
 }

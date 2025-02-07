@@ -10,13 +10,8 @@ class TradingPair extends Model
         'exchange_canonicals' => 'array',
     ];
 
-    public function baseCurrency()
+    public function logs()
     {
-        return $this->belongsTo(Symbol::class, 'base_currency', 'token');
-    }
-
-    public function quoteCurrency()
-    {
-        return $this->belongsTo(Symbol::class, 'quote_currency', 'token');
+        return $this->morphMany(ApplicationLog::class, 'loggable');
     }
 }

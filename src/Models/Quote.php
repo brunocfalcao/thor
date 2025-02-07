@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Quote extends Model
 {
-    public $timestamps = false;
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
 
     public function exchangeSymbols()
     {

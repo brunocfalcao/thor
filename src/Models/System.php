@@ -11,4 +11,9 @@ class System extends Model
     protected $casts = [
         'can_process_scheduled_tasks' => 'boolean',
     ];
+
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
 }

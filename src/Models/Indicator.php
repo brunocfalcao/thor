@@ -13,6 +13,11 @@ class Indicator extends Model
         'parameters' => 'array',
     ];
 
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
+
     public function scopeActive(Builder $query)
     {
         $query->where('is_active', true);

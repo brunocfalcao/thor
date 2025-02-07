@@ -27,4 +27,9 @@ class TradeConfiguration extends Model
     {
         $query->where('is_default', true);
     }
+
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
 }

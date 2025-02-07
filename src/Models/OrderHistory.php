@@ -12,4 +12,9 @@ class OrderHistory extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
 }

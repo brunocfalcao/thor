@@ -38,6 +38,11 @@ class ExchangeSymbol extends Model
         return $this->belongsTo(Quote::class);
     }
 
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
+
     public function apiSystem()
     {
         return $this->belongsTo(ApiSystem::class);

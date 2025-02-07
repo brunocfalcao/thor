@@ -12,12 +12,16 @@ class Symbol extends Model
     use HasExchangeCanonicalFeatures;
 
     protected $casts = [
-        'indicator_last_synced_at' => 'datetime',
         'exchange_canonicals' => 'array',
     ];
 
     public function exchangeSymbols()
     {
         return $this->hasMany(ExchangeSymbol::class);
+    }
+
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
     }
 }

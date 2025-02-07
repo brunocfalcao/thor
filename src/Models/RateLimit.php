@@ -10,6 +10,11 @@ class RateLimit extends Model
         'retry_after' => 'datetime',
     ];
 
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
+
     public function account()
     {
         return $this->belongsTo(Account::class);

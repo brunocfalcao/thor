@@ -14,4 +14,9 @@ class Trace extends Model
     {
         return $this->morphTo();
     }
+
+    public function logs()
+    {
+        return $this->morphMany(ApplicationLog::class, 'loggable');
+    }
 }
