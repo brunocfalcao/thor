@@ -14,27 +14,25 @@ return new class extends Migration
                 'return_value',
                 'return_data',
                 'comments',
-                'debug_data'
+                'debug_data',
             ]);
 
             $table->json('parameters_array')
-                  ->nullable();
+                ->nullable();
 
             $table->json('result_array')
-                  ->nullable();
+                ->nullable();
 
             $table->text('description')
-                  ->nullable();
+                ->nullable();
 
             $table->longText('return_data_text')
-                  ->nullable();
+                ->nullable();
 
             $table->json('return_data_array')
-                  ->nullable();
+                ->nullable();
         });
     }
 
-    public function down(): void
-    {
-    }
+    public function down(): void {}
 };

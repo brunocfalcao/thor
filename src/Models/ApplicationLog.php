@@ -9,7 +9,7 @@ class ApplicationLog extends Model
     protected $casts = [
         'parameters_array' => 'array',
         'result_array' => 'array',
-        'return_data_array' => 'array'
+        'return_data_array' => 'array',
     ];
 
     public function loggable()

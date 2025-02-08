@@ -3,7 +3,6 @@
 namespace Nidavellir\Thor\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Nidavellir\Thor\Models\Quote;
 use Nidavellir\Thor\Models\TradingPair;
 
 class SchemaSeeder7 extends Seeder
