@@ -2,12 +2,14 @@
 
 namespace Nidavellir\Thor;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
-use Nidavellir\Thor\Concerns\AutoRegistersObserversAndPolicies;
 use Nidavellir\Thor\Models\CoreJobQueue;
+use Nidavellir\Thor\Models\ApplicationLog;
 use Nidavellir\Thor\Observers\CoreJobQueueObserver;
+use Nidavellir\Thor\Observers\ApplicationLogObserver;
+use Nidavellir\Thor\Concerns\AutoRegistersObserversAndPolicies;
 
 class ThorServiceProvider extends ServiceProvider
 {
@@ -30,5 +32,6 @@ class ThorServiceProvider extends ServiceProvider
     protected function registerObservers()
     {
         CoreJobQueue::observe(CoreJobQueueObserver::class);
+        ApplicationLog::observe(ApplicationLogObserver::class);
     }
 }
