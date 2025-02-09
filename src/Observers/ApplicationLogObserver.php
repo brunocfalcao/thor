@@ -3,7 +3,6 @@
 namespace Nidavellir\Thor\Observers;
 
 use Illuminate\Support\Str;
-use Nidavellir\Thor\Models\CoreJobQueue;
 use Nidavellir\Thor\Models\ApplicationLog;
 
 class ApplicationLogObserver
