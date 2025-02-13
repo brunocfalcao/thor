@@ -14,6 +14,7 @@ class Order extends Model
 
     protected $casts = [
         'skip_observer' => 'boolean',
+        'is_magnetized' => 'boolean',
         'api_result' => 'array',
         'started_at' => 'datetime',
         'closed_at' => 'datetime',
