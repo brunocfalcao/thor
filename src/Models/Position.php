@@ -5,6 +5,7 @@ namespace Nidavellir\Thor\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Nidavellir\Mjolnir\Concerns\Models\Position\HasApiFeatures;
+use Nidavellir\Mjolnir\Concerns\Models\Position\HasMagnetizationFeatures;
 use Nidavellir\Mjolnir\Concerns\Models\Position\HasTokenParsingFeatures;
 use Nidavellir\Mjolnir\Concerns\Models\Position\HasTradingFeatures;
 use Nidavellir\Mjolnir\Concerns\Models\Position\HasWAPFeatures;
@@ -13,6 +14,7 @@ use Nidavellir\Thor\Concerns\Position\HasStatusesFeatures;
 class Position extends Model
 {
     use HasApiFeatures;
+    use HasMagnetizationFeatures;
     use HasStatusesFeatures;
     use HasTokenParsingFeatures;
     use HasTradingFeatures;
