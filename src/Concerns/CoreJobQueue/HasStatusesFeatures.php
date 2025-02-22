@@ -79,6 +79,11 @@ trait HasStatusesFeatures
         ]);
     }
 
+    public function updateRetries(int $retries)
+    {
+        $this->update(['retries' => $retries]);
+    }
+
     public function updateToFailed(string|\Throwable $e, $silently = false)
     {
         if (is_string($e)) {
