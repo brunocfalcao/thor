@@ -79,6 +79,13 @@ trait HasStatusesFeatures
         ]);
     }
 
+    public function updateToNotified()
+    {
+        $this->update([
+            'was_notified' => true,
+        ]);
+    }
+
     public function updateRetries(int $retries)
     {
         $this->update(['retries' => $retries]);
@@ -115,13 +122,15 @@ trait HasStatusesFeatures
                 ]);
         }
 
-        if (! $silently) {
-            // Notify failure via pushover.
+        // Notify if we should, and if it was never notified (for errors).
+        if (! $silently && ! $this->was_notified) {
             User::where('is_admin', true)
                 ->get()
                 ->each(function ($user) use ($errorMessage) {
                     $user->pushover($errorMessage, 'Core Job Queue Error', 'nidavellir_errors', ['priority' => 1, 'sound' => 'siren']);
                 });
+
+            $this->updateToNotified();
         }
     }
 }

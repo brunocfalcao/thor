@@ -25,6 +25,12 @@ class CoreJobQueue extends Model
         'arguments' => 'array',
         'extra_data' => 'array',
         'response' => 'array',
+
+        'was_notified' => 'boolean',
+
+        'dispatch_after' => 'datetime',
+        'started_at' => 'datetime',
+        'closed_at' => 'datetime',
     ];
 
     public function logs()
