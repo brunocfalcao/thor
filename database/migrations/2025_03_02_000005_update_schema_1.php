@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -14,5 +15,9 @@ return new class extends Migration
                 ->after('error_stack_trace')
                 ->comment('If this core job queue entry already notified the admins');
         });
+
+        Artisan::call('db:seed', [
+            '--class' => Nidavellir\Thor\Database\Seeders\SchemaSeeder9::class,
+        ]);
     }
 };
