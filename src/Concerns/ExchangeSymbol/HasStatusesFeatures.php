@@ -16,6 +16,10 @@ trait HasStatusesFeatures
 
     public function isTradeable()
     {
-        return $this->isActive() && $this->isUpsertable() && $this->is_tradeable;
+        return $this->isActive() &&
+               $this->isUpsertable() &&
+               $this->is_tradeable &&
+               $this->indicators != null &&
+               $this->indicator_timeframe != null;
     }
 }

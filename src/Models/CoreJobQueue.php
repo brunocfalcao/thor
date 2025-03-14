@@ -27,6 +27,7 @@ class CoreJobQueue extends Model
         'response' => 'array',
 
         'was_notified' => 'boolean',
+        'max_retries_reached' => 'boolean',
 
         'dispatch_after' => 'datetime',
         'started_at' => 'datetime',

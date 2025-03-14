@@ -91,24 +91,34 @@ trait HasStatusesFeatures
         $this->update(['retries' => $retries]);
     }
 
-    public function updateToFailed(string|\Throwable $e, $silently = false)
+    public function updateToFailed(string|\Throwable|null $e = null, $silently = false)
     {
-        if (is_string($e)) {
-            $errorMessage = $e;
-            $traceMessage = null;
+        if (isset($e)) {
+            if (is_string($e)) {
+                $errorMessage = $e;
+                $traceMessage = null;
+            } else {
+                $errorMessage = $this->class.' - '.$e->getMessage().' (line '.$e->getLine().')';
+                $traceMessage = $e->getTraceAsString();
+            }
         } else {
-            $errorMessage = $this->class.' - '.$e->getMessage().' (line '.$e->getLine().')';
-            $traceMessage = $e->getTraceAsString();
+            $errorMessage = null;
+            $traceMessage = null;
         }
 
         // Update the current job to 'failed'.
-        $this->update([
+        $dataToUpdate = [
             'status' => 'failed',
             'hostname' => gethostname(),
-            'error_message' => $errorMessage,
             'error_stack_trace' => $traceMessage,
             'completed_at' => now(),
-        ]);
+        ];
+
+        if ($this->error_message == null) {
+            $dataToUpdate['error_message'] = $errorMessage;
+        }
+
+        $this->update($dataToUpdate);
 
         // Apply "next index" logic.
         if ($this->index) {
@@ -116,9 +126,10 @@ trait HasStatusesFeatures
             $modelClass = get_class($this);
             $modelClass::where('block_uuid', $this->block_uuid)
                 ->where('index', '>', $this->index)
-                ->where('status', 'pending') // Only cancel jobs still in 'pending' status
+                ->where('status', 'pending')
                 ->update([
                     'status' => 'cancelled',
+                    'error_message' => "Core job queue ID {$this->id} failed, so this core job is cancelled",
                 ]);
         }
 
@@ -127,7 +138,7 @@ trait HasStatusesFeatures
             User::where('is_admin', true)
                 ->get()
                 ->each(function ($user) use ($errorMessage) {
-                    $user->pushover($errorMessage, 'Core Job Queue Error', 'nidavellir_errors', ['priority' => 1, 'sound' => 'siren']);
+                    $user->pushover($errorMessage, "Core Job Queue Error [{$this->id}]", 'nidavellir_warnings');
                 });
 
             $this->updateToNotified();

@@ -53,15 +53,26 @@ class ExchangeSymbol extends Model
         $query->where('exchange_symbols.quote_id', $quote->id);
     }
 
+    /**
+     * The scope eligible is the same as the scope tradeable but with the
+     * addition of not having BTC as a tradeable symbol.
+     */
     public function scopeEligible(Builder $query)
     {
         // Never make BTC eligible to be selected as an exchange symbol for trading.
         $btcSymbolId = Symbol::query()->firstWhere('token', 'BTC')?->id;
 
+        $query->tradeable()
+            ->where('exchange_symbols.symbol_id', '<>', $btcSymbolId)
+            ->whereNotNull('direction');
+    }
+
+    public function scopeTradeable(Builder $query)
+    {
         $query->where('exchange_symbols.is_active', true)
             ->where('exchange_symbols.is_upsertable', true)
             ->where('exchange_symbols.is_tradeable', true)
-            ->where('exchange_symbols.symbol_id', '<>', $btcSymbolId)
-            ->whereNotNull('direction');
+            ->whereNotNull('indicators')
+            ->whereNotNull('indicator_timeframe');
     }
 }
