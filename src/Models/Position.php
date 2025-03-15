@@ -9,12 +9,14 @@ use Nidavellir\Mjolnir\Concerns\Models\Position\HasMagnetizationFeatures;
 use Nidavellir\Mjolnir\Concerns\Models\Position\HasTokenParsingFeatures;
 use Nidavellir\Mjolnir\Concerns\Models\Position\HasTradingFeatures;
 use Nidavellir\Mjolnir\Concerns\Models\Position\HasWAPFeatures;
+use Nidavellir\Thor\Concerns\Position\HasOrdersFeatures;
 use Nidavellir\Thor\Concerns\Position\HasStatusesFeatures;
 
 class Position extends Model
 {
     use HasApiFeatures;
     use HasMagnetizationFeatures;
+    use HasOrdersFeatures;
     use HasStatusesFeatures;
     use HasTokenParsingFeatures;
     use HasTradingFeatures;

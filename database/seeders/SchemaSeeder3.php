@@ -9,6 +9,6 @@ class SchemaSeeder3 extends Seeder
 {
     public function run(): void
     {
-        TradeConfiguration::query()->default()->first()->update(['total_limit_orders' => 5]);
+        TradeConfiguration::query()->default()->first()->update(['total_limit_orders' => 4]);
     }
 }
