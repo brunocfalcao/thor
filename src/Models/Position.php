@@ -24,6 +24,8 @@ class Position extends Model
 
     protected $casts = [
         'wap_triggered' => 'boolean',
+        'stop_loss_triggered' => 'boolean',
+
         'started_at' => 'datetime',
         'closed_at' => 'datetime',
         'indicators' => 'array',

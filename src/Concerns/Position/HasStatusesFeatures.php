@@ -6,7 +6,7 @@ trait HasStatusesFeatures
 {
     public function isActive()
     {
-        return ! in_array($this->status, ['closed', 'failed', 'cancelled', 'rollbacked']);
+        return ! in_array($this->status, ['closed-residual', 'closed', 'failed', 'cancelled', 'rollbacked']);
     }
 
     public function isRollbacking()
@@ -32,6 +32,11 @@ trait HasStatusesFeatures
     public function updateToActive()
     {
         $this->update(['status' => 'active']);
+    }
+
+    public function updateToClosedResidual()
+    {
+        $this->update(['status' => 'closed-residual']);
     }
 
     public function updateToRollbacking(?string $message = null)
