@@ -22,4 +22,9 @@ class Indicator extends Model
     {
         $query->where('is_active', true);
     }
+
+    public function scopeApiable(Builder $query)
+    {
+        $query->where('is_apiable', true);
+    }
 }
