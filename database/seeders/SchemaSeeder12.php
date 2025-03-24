@@ -3,8 +3,8 @@
 namespace Nidavellir\Thor\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Nidavellir\Thor\Models\Indicator;
 use Illuminate\Support\Str;
+use Nidavellir\Thor\Models\Indicator;
 
 class SchemaSeeder12 extends Seeder
 {
