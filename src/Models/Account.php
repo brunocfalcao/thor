@@ -14,6 +14,7 @@ class Account extends Model
     use HasActionFeatures, HasApiFeatures, HasDrawDownFeatures, SoftDeletes;
 
     protected $casts = [
+        'should_notify' => 'boolean',
         'follow_btc_direction' => 'boolean',
         'with_half_positions_direction' => 'boolean',
         'is_active' => 'boolean',
